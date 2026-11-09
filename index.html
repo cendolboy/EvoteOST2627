@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OST E-Vote - SMA Talenta</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            play: {
+              green: '#01875F',
+              'green-dark': '#006C4C',
+              'green-mint': '#E6F4EA',
+              blue: '#1A73E8',
+              bg: '#F8F9FA',
+              card: '#FFFFFF',
+              dark: '#202124',
+              subtle: '#5F6368',
+              border: '#E8EAED'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      background-color: #F8F9FA;
+      color: #202124;
+    }
+
+    .play-card-shadow {
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.1), 0 1px 3px 1px rgba(60,64,67,0.05);
+    }
+    
+    .play-card-shadow-lg {
+      box-shadow: 0 4px 12px 0 rgba(60,64,67,0.08), 0 1px 3px 0 rgba(60,64,67,0.1);
+    }
+
+    .candidate-selected {
+      border-color: #01875F !important;
+      background-color: #E6F4EA !important;
+      box-shadow: 0 2px 8px rgba(1, 135, 95, 0.18) !important;
+    }
+
+    .view-transition {
+      animation: playSlide 0.3s cubic-bezier(0.2, 0, 0, 1);
+    }
+    @keyframes playSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.4s ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex justify-center bg-play-bg">
+
+  <div class="w-full max-w-md md:max-w-xl bg-play-bg min-h-screen flex flex-col justify-between relative pb-24">
+
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl h-48 bg-gradient-to-b from-emerald-100/40 via-blue-50/20 to-transparent pointer-events-none -z-10"></div>
+    <div class="fixed top-12 right-6 w-32 h-32 bg-play-green/5 rounded-full blur-2xl pointer-events-none -z-10"></div>
+
+    <!-- VIEW 1: LOADING STATE -->
+    <div id="view-loading" class="flex-1 flex flex-col items-center justify-center p-8 min-h-screen">
+      <div class="w-12 h-12 border-4 border-play-border border-t-play-green rounded-full animate-spin"></div>
+      <p class="text-xs font-bold text-play-subtle tracking-wider uppercase mt-5 animate-pulse">Memuat OST E-Vote...</p>
+    </div>
+
+    <!-- VIEW 2: LOGIN SCREEN -->
+    <div id="view-login" style="display:none;" class="flex-1 flex flex-col justify-between p-4 sm:p-6 min-h-screen view-transition">
+      
+      <div class="flex items-center justify-between pt-2 pb-4">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-lg bg-play-green text-white font-black flex items-center justify-center text-xs shadow-sm">
+            ST
+          </div>
+          <span class="text-xs font-extrabold text-play-dark">SMA Talenta Bandung</span>
+        </div>
+        <span class="text-[10px] font-black bg-play-green-mint text-play-green px-2.5 py-1 rounded-full border border-play-green/20 uppercase tracking-wider">
+          TP 2027/2028
+        </span>
+      </div>
+
+      <div class="bg-gradient-to-br from-emerald-600 via-teal-700 to-play-green text-white rounded-3xl p-6 play-card-shadow-lg relative overflow-hidden my-auto">
+        <div class="absolute -right-6 -bottom-6 w-36 h-36 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute -left-6 -top-6 w-28 h-28 bg-emerald-400/20 rounded-full blur-lg pointer-events-none"></div>
+
+        <div class="relative z-10">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-14 h-14 bg-white text-play-green rounded-2xl flex items-center justify-center shadow-lg shadow-black/10">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <span class="text-[10px] font-extrabold bg-white/20 backdrop-blur-md px-3 py-1 rounded-full uppercase tracking-wider text-emerald-50 border border-white/20">
+              Official E-Voting
+            </span>
+          </div>
+
+          <h1 class="text-2xl font-black text-white tracking-tight">OST E-Vote</h1>
+          <p class="text-xs text-emerald-100 font-medium mt-1 leading-relaxed">
+            Portal resmi pemungutan suara Ketua & Wakil Ketua OSIS SMA Talenta Bandung secara langsung dan terenkripsi.
+          </p>
+
+          <div class="flex flex-wrap gap-2 mt-4 pt-2 border-t border-white/15">
+            <span class="text-[10px] font-bold bg-white/15 px-2.5 py-1 rounded-lg text-white flex items-center space-x-1">
+              <span>🔒 100% Rahasia</span>
+            </span>
+            <span class="text-[10px] font-bold bg-white/15 px-2.5 py-1 rounded-lg text-white flex items-center space-x-1">
+              <span>⚡ Real-time Sync</span>
+            </span>
+            <span class="text-[10px] font-bold bg-white/15 px-2.5 py-1 rounded-lg text-white flex items-center space-x-1">
+              <span>🎓 Akun Google</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="my-4">
+        <div id="auth-box" class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-play-border">
+            <div class="flex items-center space-x-2">
+              <svg class="w-4 h-4 text-play-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <span class="text-xs font-extrabold text-play-dark">Identitas Pemilih</span>
+            </div>
+            <span class="inline-flex items-center text-[10px] font-bold text-play-green bg-play-green-mint px-2 py-0.5 rounded-full border border-play-green/20">
+              <span class="w-1.5 h-1.5 rounded-full bg-play-green inline-block mr-1.5 animate-pulse"></span>
+              Siap Memilih
+            </span>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[11px] font-bold text-play-subtle uppercase">Masukkan Email Google Anda</label>
+            <input type="email" id="input-user-email" placeholder="contoh: siswa@smatalenta.sch.id" 
+              class="w-full px-3.5 py-2.5 border border-play-border rounded-xl text-xs font-semibold focus:outline-none focus:border-play-green bg-play-bg">
+          </div>
+
+          <button onclick="handleLogin()" class="w-full bg-play-green hover:bg-play-green-dark text-white font-extrabold text-sm py-3.5 px-4 rounded-xl shadow-md shadow-play-green/20 transition-all active:scale-[0.98] flex items-center justify-center space-x-2">
+            <span>Masuk ke Dashboard E-Vote</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="text-center pt-2 pb-2 space-y-2">
+        <p class="text-[10px] font-semibold text-play-subtle flex items-center justify-center space-x-1">
+          <span>🔒 Google Spreadsheet Cloud Backend</span>
+        </p>
+        <p class="text-[11px] font-bold text-play-subtle">
+          Developed By <span class="text-play-green font-extrabold">Pa Amos</span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- VIEW 3: MAIN DASHBOARD -->
+    <div id="view-dashboard" style="display:none;" class="flex-1 flex flex-col view-transition">
+      
+      <header class="bg-play-card border-b border-play-border px-4 py-3 sticky top-0 z-30 flex items-center justify-between play-card-shadow">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-lg bg-play-green text-white font-black flex items-center justify-center text-xs shadow-sm">
+            ST
+          </div>
+          <div>
+            <h1 class="text-sm font-extrabold text-play-dark leading-tight">OST E-Vote</h1>
+            <p class="text-[10px] font-semibold text-play-subtle">SMA Talenta Bandung</p>
+          </div>
+        </div>
+
+        <button onclick="handleLogout()" title="Keluar Sesi" aria-label="Logout" class="w-11 h-11 rounded-full hover:bg-slate-100 flex items-center justify-center text-play-subtle hover:text-red-600 transition-colors active:scale-95">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          </svg>
+        </button>
+      </header>
+
+      <main class="p-4 space-y-4">
+
+        <div class="bg-play-card border border-play-border rounded-2xl p-4 play-card-shadow flex items-center justify-between">
+          <div class="flex items-center space-x-3 min-w-0">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-play-green to-teal-400 text-white font-black text-base flex items-center justify-center flex-shrink-0 shadow-sm">
+              <span id="user-avatar-initial">S</span>
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center space-x-2">
+                <h2 id="user-name" class="text-sm font-extrabold text-play-dark truncate">Pemilih</h2>
+              </div>
+              <p id="user-email-badge" class="text-xs font-medium text-play-subtle truncate mt-0.5">email@domain.com</p>
+            </div>
+          </div>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-play-green-mint text-play-green border border-play-green/20 flex-shrink-0 ml-2">
+            Terverifikasi
+          </span>
+        </div>
+
+        <div class="relative overflow-hidden rounded-2xl border border-play-border bg-play-card play-card-shadow">
+          <div id="carousel-track" class="carousel-track">
+            
+            <div class="min-w-full p-4 bg-gradient-to-r from-emerald-600 to-teal-700 text-white relative overflow-hidden flex flex-col justify-between min-h-[120px]">
+              <div class="absolute -right-4 -bottom-4 w-28 h-28 bg-white/10 rounded-full blur-lg"></div>
+              <div>
+                <span class="text-[10px] font-extrabold bg-white/20 px-2 py-0.5 rounded-full uppercase tracking-wider text-emerald-100">Informasi Pemilu</span>
+                <h3 class="text-base font-extrabold mt-1">Gunakan Hak Suara Anda</h3>
+                <p class="text-xs text-emerald-100 mt-0.5 font-medium">Satu suara menentukan arah kepemimpinan OSIS SMA Talenta.</p>
+              </div>
+              <p class="text-[10px] font-bold text-emerald-200 mt-2">Masa Bakti 2027 / 2028</p>
+            </div>
+
+            <div class="min-w-full p-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white relative overflow-hidden flex flex-col justify-between min-h-[120px]">
+              <div class="absolute -right-4 -bottom-4 w-28 h-28 bg-white/10 rounded-full blur-lg"></div>
+              <div>
+                <span class="text-[10px] font-extrabold bg-white/20 px-2 py-0.5 rounded-full uppercase tracking-wider text-blue-100">Jaminan Keamanan</span>
+                <h3 class="text-base font-extrabold mt-1">Pemilihan Langsung & Rahasia</h3>
+                <p class="text-xs text-blue-100 mt-0.5 font-medium">Pilihan Anda dienkripsi dan tidak dapat diubah setelah dikirim.</p>
+              </div>
+              <p class="text-[10px] font-bold text-blue-200 mt-2">Sistem Terkunci Otomatis</p>
+            </div>
+
+            <div class="min-w-full p-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white relative overflow-hidden flex flex-col justify-between min-h-[120px]">
+              <div class="absolute -right-4 -bottom-4 w-28 h-28 bg-white/10 rounded-full blur-lg"></div>
+              <div>
+                <span class="text-[10px] font-extrabold bg-white/20 px-2 py-0.5 rounded-full uppercase tracking-wider text-amber-100">Tata Cara</span>
+                <h3 class="text-base font-extrabold mt-1">Pilih 1 Pasangan Calon</h3>
+                <p class="text-xs text-amber-100 mt-0.5 font-medium">Ketuk kartu paslon favorit Anda lalu konfirmasi dengan tombol Vote.</p>
+              </div>
+              <p class="text-[10px] font-bold text-amber-200 mt-2">3 Pasangan Calon Resmi</p>
+            </div>
+
+          </div>
+
+          <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex space-x-1.5 z-10">
+            <button onclick="goToSlide(0)" class="dot-btn w-2 h-2 rounded-full bg-white transition-all" aria-label="Slide 1"></button>
+            <button onclick="goToSlide(1)" class="dot-btn w-2 h-2 rounded-full bg-white/50 transition-all" aria-label="Slide 2"></button>
+            <button onclick="goToSlide(2)" class="dot-btn w-2 h-2 rounded-full bg-white/50 transition-all" aria-label="Slide 3"></button>
+          </div>
+        </div>
+
+        <div id="already-voted-banner" style="display:none;" class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-center play-card-shadow">
+          <div class="flex items-center justify-center space-x-2 text-amber-800 font-extrabold text-xs">
+            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span>HAK SUARA TELAH DIGUNAKAN</span>
+          </div>
+          <p class="text-xs text-amber-700 mt-1 font-medium">
+            Anda telah memilih <strong id="voted-choice-number" class="text-play-green font-extrabold">Paslon 0-</strong>. Pilihan tersimpan aman di spreadsheet.
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <h3 class="text-xs font-extrabold text-play-dark uppercase tracking-wider">Daftar Pasangan Calon</h3>
+          <span class="text-[11px] font-bold text-play-green bg-play-green-mint px-2.5 py-0.5 rounded-full border border-play-green/20">3 Pilihan</span>
+        </div>
+
+        <div class="space-y-3">
+          <div onclick="selectOption(1)" id="card-1" class="candidate-card bg-play-card border-2 border-play-border rounded-2xl p-4 transition-all duration-200 cursor-pointer hover:border-play-green/50 play-card-shadow relative">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black flex items-center justify-center text-base flex-shrink-0 shadow-sm">
+                01
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="text-[10px] font-extrabold text-play-green uppercase tracking-wider">Kandidat Nomor 01</span>
+                <p class="text-xs sm:text-sm font-extrabold text-play-dark truncate mt-0.5">Karenn Aeleena Nicole</p>
+                <p class="text-[11px] font-semibold text-play-subtle truncate">& Kenneth Richie Sabella</p>
+              </div>
+              <input type="radio" name="candidate" id="opt1" value="1" class="w-5 h-5 accent-play-green flex-shrink-0">
+            </div>
+          </div>
+
+          <div onclick="selectOption(2)" id="card-2" class="candidate-card bg-play-card border-2 border-play-border rounded-2xl p-4 transition-all duration-200 cursor-pointer hover:border-play-green/50 play-card-shadow relative">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black flex items-center justify-center text-base flex-shrink-0 shadow-sm">
+                02
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="text-[10px] font-extrabold text-play-green uppercase tracking-wider">Kandidat Nomor 02</span>
+                <p class="text-xs sm:text-sm font-extrabold text-play-dark truncate mt-0.5">Xavier Lee Felton</p>
+                <p class="text-[11px] font-semibold text-play-subtle truncate">& Muhammad Rafie Asmoro</p>
+              </div>
+              <input type="radio" name="candidate" id="opt2" value="2" class="w-5 h-5 accent-play-green flex-shrink-0">
+            </div>
+          </div>
+
+          <div onclick="selectOption(3)" id="card-3" class="candidate-card bg-play-card border-2 border-play-border rounded-2xl p-4 transition-all duration-200 cursor-pointer hover:border-play-green/50 play-card-shadow relative">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black flex items-center justify-center text-base flex-shrink-0 shadow-md">
+                03
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="text-[10px] font-extrabold text-play-green uppercase tracking-wider">Kandidat Nomor 03</span>
+                <p class="text-xs sm:text-sm font-extrabold text-play-dark truncate mt-0.5">Ravel Fulvi Algha Yapiawan</p>
+                <p class="text-[11px] font-semibold text-play-subtle truncate">& Catharina Putri Chavella K.</p>
+              </div>
+              <input type="radio" name="candidate" id="opt3" value="3" class="w-5 h-5 accent-play-green flex-shrink-0">
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+      <footer class="p-4 text-center text-[11px] font-bold text-play-subtle">
+        Developed By <span class="text-play-green font-extrabold">Pa Amos</span>
+      </footer>
+
+      <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md md:max-w-xl bg-play-card border-t border-play-border p-3.5 z-40 play-card-shadow-lg">
+        <button id="btn-vote" disabled onclick="submitChoice()" class="w-full bg-slate-200 text-slate-500 font-extrabold text-sm py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 cursor-not-allowed">
+          <span>Pilih Paslon Terlebih Dahulu</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- VIEW 4: VOTED RECEIPT SCREEN -->
+    <div id="view-voted" style="display:none;" class="flex-1 flex flex-col justify-between p-5 min-h-screen view-transition">
+      <div class="my-auto">
+        <div class="bg-play-card border border-play-border rounded-2xl p-6 text-center play-card-shadow relative overflow-hidden">
+          <div class="w-16 h-16 bg-play-green-mint text-play-green border border-play-green/30 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+            <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+          </div>
+
+          <h2 class="text-xl font-black text-play-dark">Suara Berhasil Dicatat!</h2>
+          <p class="text-xs text-play-subtle mt-0.5 font-medium">Bukti Resmi Partisipasi E-Vote OSIS</p>
+
+          <div class="bg-play-bg border border-play-border rounded-xl p-4 mt-5 text-left text-xs space-y-3">
+            <div class="flex justify-between border-b border-play-border pb-2">
+              <span class="text-play-subtle font-medium">Nama Pemilih</span>
+              <span id="receipt-name" class="font-extrabold text-play-dark">-</span>
+            </div>
+            <div class="flex justify-between border-b border-play-border pb-2">
+              <span class="text-play-subtle font-medium">Pilihan Paslon</span>
+              <span id="receipt-choice" class="font-extrabold text-white bg-play-green px-2.5 py-0.5 rounded text-[11px]">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-play-subtle font-medium">Status Perekaman</span>
+              <span class="font-bold text-play-green">TERVERIFIKASI & TERKUNCI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4 pb-4">
+        <button onclick="handleLogout()" class="w-full bg-play-card hover:bg-slate-100 text-play-dark font-extrabold text-xs py-3.5 px-4 rounded-xl border border-play-border transition-all active:scale-95 shadow-sm">
+          Selesai & Keluar Sesi
+        </button>
+        <footer class="text-center text-[11px] font-bold text-play-subtle">
+          Developed By <span class="text-play-green font-extrabold">Pa Amos</span>
+        </footer>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // Ganti dengan URL Google Apps Script Web App milik Anda
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyflJqDgMRUAoZE--zkct-IzUXZz4PxRlzSQPKFb7NqldNPNMlJZ4KkxFC9MVjmtt7Z/exec";
+
+  let userData = null;
+  let selectedValue = null;
+  let currentSlide = 0;
+  let carouselInterval = null;
+
+  function switchView(viewName) {
+    document.getElementById('view-loading').style.display = 'none';
+    document.getElementById('view-login').style.display = 'none';
+    document.getElementById('view-dashboard').style.display = 'none';
+    document.getElementById('view-voted').style.display = 'none';
+
+    document.getElementById('view-' + viewName).style.display = 'flex';
+  }
+
+  function initCarousel() {
+    if (carouselInterval) clearInterval(carouselInterval);
+    carouselInterval = setInterval(() => {
+      currentSlide = (currentSlide + 1) % 3;
+      updateCarouselUI();
+    }, 4000);
+  }
+
+  function goToSlide(slideIndex) {
+    currentSlide = slideIndex;
+    updateCarouselUI();
+    initCarousel();
+  }
+
+  function updateCarouselUI() {
+    const track = document.getElementById('carousel-track');
+    if (track) {
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    const dots = document.querySelectorAll('.dot-btn');
+    dots.forEach((dot, idx) => {
+      if (idx === currentSlide) {
+        dot.className = "dot-btn w-5 h-2 rounded-full bg-white transition-all";
+      } else {
+        dot.className = "dot-btn w-2 h-2 rounded-full bg-white/50 transition-all";
+      }
+    });
+  }
+
+  window.onload = function() {
+    switchView('login');
+  };
+
+  async function handleLogin() {
+    const emailInput = document.getElementById('input-user-email').value.trim();
+    if (!emailInput) {
+      alert("Silakan masukkan alamat email Google Anda!");
+      return;
+    }
+
+    switchView('loading');
+
+    try {
+      const response = await fetch(`${SCRIPT_URL}?action=check&email=${encodeURIComponent(emailInput)}`);
+      const status = await response.json();
+      
+      userData = status;
+      userData.displayName = emailInput.split('@')[0];
+
+      document.getElementById('user-name').innerText = userData.displayName;
+      document.getElementById('user-avatar-initial').innerText = userData.displayName.charAt(0).toUpperCase();
+      document.getElementById('user-email-badge').innerText = userData.email;
+
+      const votedBanner = document.getElementById('already-voted-banner');
+      const btn = document.getElementById('btn-vote');
+
+      if (userData.hasVoted) {
+        selectedValue = userData.existingChoice;
+        selectOption(userData.existingChoice);
+
+        document.querySelectorAll('.candidate-card').forEach(card => {
+          card.style.pointerEvents = 'none';
+        });
+
+        votedBanner.style.display = 'block';
+        document.getElementById('voted-choice-number').innerText = "Paslon 0" + userData.existingChoice;
+
+        btn.disabled = true;
+        btn.onclick = null;
+        btn.className = "w-full bg-emerald-600 text-white font-extrabold text-sm py-3.5 px-4 rounded-xl shadow-md flex items-center justify-center space-x-2 opacity-95 cursor-not-allowed";
+        btn.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+          <span>Anda Sudah Melakukan Vote</span>
+        `;
+      } else {
+        votedBanner.style.display = 'none';
+        document.querySelectorAll('.candidate-card').forEach(card => {
+          card.style.pointerEvents = 'auto';
+        });
+
+        resetVoteButtonState();
+      }
+
+      switchView('dashboard');
+      initCarousel();
+
+    } catch (err) {
+      onError(err);
+    }
+  }
+
+  function resetVoteButtonState() {
+    const btn = document.getElementById('btn-vote');
+    btn.disabled = true;
+    btn.onclick = submitChoice;
+    btn.className = "w-full bg-slate-200 text-slate-500 font-extrabold text-sm py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 cursor-not-allowed";
+    btn.innerHTML = `
+      <span>Pilih Paslon Terlebih Dahulu</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+    `;
+  }
+
+  function handleLogout() {
+    selectedValue = null;
+    if (carouselInterval) clearInterval(carouselInterval);
+    document.querySelectorAll('.candidate-card').forEach(card => {
+      card.classList.remove('candidate-selected');
+      card.style.pointerEvents = 'auto';
+    });
+    document.getElementById('input-user-email').value = '';
+    switchView('login');
+  }
+
+  function selectOption(val) {
+    if (userData && userData.hasVoted && val !== userData.existingChoice) return;
+
+    selectedValue = val;
+    document.getElementById('opt' + val).checked = true;
+
+    if (navigator.vibrate) navigator.vibrate(20);
+
+    document.querySelectorAll('.candidate-card').forEach(card => {
+      card.classList.remove('candidate-selected');
+    });
+
+    const activeCard = document.getElementById('card-' + val);
+    if (activeCard) {
+      activeCard.classList.add('candidate-selected');
+    }
+
+    if (!userData.hasVoted) {
+      const btn = document.getElementById('btn-vote');
+      btn.disabled = false;
+      btn.className = "w-full bg-play-green hover:bg-play-green-dark text-white font-extrabold text-sm py-3.5 px-4 rounded-xl shadow-lg shadow-play-green/30 active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2 cursor-pointer";
+      btn.innerHTML = `
+        <span>Kirim Suara (Paslon 0${val})</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+      `;
+    }
+  }
+
+  async function submitChoice() {
+    if (userData && userData.hasVoted) return;
+
+    if (!selectedValue) {
+      alert("Silakan pilih salah satu pasangan calon terlebih dahulu!");
+      return;
+    }
+
+    if (!confirm("Konfirmasi Suara: Apakah Anda yakin memilih Paslon 0" + selectedValue + "? Pilihan Anda bersifat rahasia dan tidak dapat diubah setelah dikirim.")) {
+      return;
+    }
+
+    const btn = document.getElementById('btn-vote');
+    btn.disabled = true;
+    btn.innerText = "Memproses Suara Anda...";
+
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          email: userData.email,
+          choice: selectedValue
+        })
+      });
+
+      const resData = await response.json();
+      onVoteSubmitted(resData);
+
+    } catch (err) {
+      onError(err);
+    }
+  }
+
+  function onVoteSubmitted(response) {
+    if (response.success) {
+      userData.hasVoted = true;
+      userData.existingChoice = selectedValue;
+      fireConfetti();
+      showVotedReceipt(userData.displayName, selectedValue);
+    } else {
+      alert(response.message);
+      selectOption(selectedValue);
+    }
+  }
+
+  function showVotedReceipt(name, choice) {
+    document.getElementById('receipt-name').innerText = name;
+    document.getElementById('receipt-choice').innerText = "Paslon 0" + choice;
+    switchView('voted');
+  }
+
+  function fireConfetti() {
+    try {
+      confetti({
+        particleCount: 90,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#01875F', '#1A73E8', '#F59E0B', '#10B981']
+      });
+    } catch(e) {}
+  }
+
+  function onError(err) {
+    switchView('login');
+    alert("Terjadi kesalahan sistem: " + (err.message || err.toString()));
+  }
+</script>
+
+</body>
+</html>
