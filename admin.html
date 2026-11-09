@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Real-time Dashboard - OST E-Vote SMA Talenta</title>
+
+  <!-- Tailwind CSS & Chart.js CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            play: {
+              green: '#01875F',
+              'green-dark': '#006C4C',
+              'green-mint': '#E6F4EA',
+              blue: '#1A73E8',
+              bg: '#F8F9FA',
+              card: '#FFFFFF',
+              dark: '#202124',
+              subtle: '#5F6368',
+              border: '#E8EAED'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      background-color: #F8F9FA;
+      color: #202124;
+    }
+    .play-card-shadow {
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.1), 0 1px 3px 1px rgba(60,64,67,0.05);
+    }
+    .play-card-shadow-lg {
+      box-shadow: 0 4px 12px 0 rgba(60,64,67,0.08), 0 1px 3px 0 rgba(60,64,67,0.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-play-bg">
+
+  <!-- TOP NAVBAR -->
+  <header class="bg-play-card border-b border-play-border sticky top-0 z-30 play-card-shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-play-green text-white font-black flex items-center justify-center text-sm shadow-sm">
+          ST
+        </div>
+        <div>
+          <h1 class="text-base font-extrabold text-play-dark leading-tight flex items-center space-x-2">
+            <span>Dashboard Perhitungan Suara</span>
+            <span class="text-[10px] bg-play-green-mint text-play-green border border-play-green/20 px-2 py-0.5 rounded-full font-bold">LIVE</span>
+          </h1>
+          <p class="text-xs font-medium text-play-subtle">OST E-Vote SMA Talenta Bandung • TP 2027/2028</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <div class="hidden sm:flex items-center space-x-2 bg-play-bg px-3 py-1.5 rounded-xl border border-play-border">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-xs font-bold text-play-subtle">Auto Sync 5s</span>
+        </div>
+        <button onclick="fetchStats()" class="bg-play-green hover:bg-play-green-dark text-white font-bold text-xs py-2 px-3.5 rounded-xl shadow-sm transition-all flex items-center space-x-1.5 active:scale-95">
+          <svg id="refresh-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- KPI CARDS SUMMARY -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Total Suara Masuk</p>
+          <h3 id="stat-total-votes" class="text-3xl font-black text-play-dark mt-1">0</h3>
+          <p class="text-[11px] text-emerald-600 font-semibold mt-1">Terverifikasi di Spreadsheet</p>
+        </div>
+        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center font-bold">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+      </div>
+
+      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Kandidat Unggul</p>
+          <h3 id="stat-leader" class="text-xl font-black text-play-green mt-1">-</h3>
+          <p id="stat-leader-votes" class="text-[11px] text-play-subtle font-semibold mt-1">0 Suara</p>
+        </div>
+        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center font-bold">
+          🏆
+        </div>
+      </div>
+
+      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Status Server API</p>
+          <h3 class="text-lg font-extrabold text-emerald-600 mt-1 flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <span>Online</span>
+          </h3>
+          <p id="stat-last-update" class="text-[11px] text-play-subtle font-medium mt-1">Updated: -</p>
+        </div>
+        <div class="w-12 h-12 bg-blue-50 text-play-blue rounded-2xl flex items-center justify-center font-bold">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        </div>
+      </div>
+
+      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Pengembang Sistem</p>
+          <h3 class="text-lg font-black text-play-dark mt-1">Pa Amos</h3>
+          <p class="text-[11px] text-play-subtle font-semibold mt-1">SMA Talenta Bandung</p>
+        </div>
+        <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center font-bold">
+          👨‍💻
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CHARTS SECTION -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- BAR CHART -->
+      <div class="lg:col-span-2 bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
+          <div>
+            <h2 class="text-sm font-extrabold text-play-dark">Perbandingan Suara Pasangan Calon</h2>
+            <p class="text-xs text-play-subtle">Grafik batang perolehan jumlah suara fisik secara akumulatif</p>
+          </div>
+          <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Bar Chart</span>
+        </div>
+        <div class="h-64 sm:h-80 relative">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+
+      <!-- DOUGHNUT CHART -->
+      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
+          <div>
+            <h2 class="text-sm font-extrabold text-play-dark">Persentase Perolehan Suara</h2>
+            <p class="text-xs text-play-subtle">Proporsi (%) dari total pemilih</p>
+          </div>
+          <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Share %</span>
+        </div>
+        <div class="h-64 sm:h-80 relative flex items-center justify-center">
+          <canvas id="doughnutChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CANDIDATE BREAKDOWN TABLE & LIVE LOG -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- CANDIDATE DETAILS TABLE -->
+      <div class="lg:col-span-2 bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
+          <h2 class="text-sm font-extrabold text-play-dark">Rincian Pasangan Calon</h2>
+          <span class="text-xs font-bold text-play-green bg-play-green-mint px-2.5 py-0.5 rounded-full border border-play-green/20">3 Paslon</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-play-subtle uppercase border-b border-play-border bg-play-bg">
+                <th class="py-3 px-3 rounded-l-xl">No</th>
+                <th class="py-3 px-3">Pasangan Calon</th>
+                <th class="py-3 px-3 text-center">Jumlah Suara</th>
+                <th class="py-3 px-3 text-right rounded-r-xl">Persentase</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-play-border font-medium">
+              <tr>
+                <td class="py-3 px-3 font-black text-emerald-600">01</td>
+                <td class="py-3 px-3">
+                  <p class="font-extrabold text-play-dark">Karenn Aeleena Nicole</p>
+                  <p class="text-[11px] text-play-subtle">& Kenneth Richie Sabella</p>
+                </td>
+                <td id="table-v1" class="py-3 px-3 text-center font-bold text-sm">0</td>
+                <td id="table-p1" class="py-3 px-3 text-right font-extrabold text-emerald-600">0.0%</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-3 font-black text-blue-600">02</td>
+                <td class="py-3 px-3">
+                  <p class="font-extrabold text-play-dark">Xavier Lee Felton</p>
+                  <p class="text-[11px] text-play-subtle">& Muhammad Rafie Asmoro</p>
+                </td>
+                <td id="table-v2" class="py-3 px-3 text-center font-bold text-sm">0</td>
+                <td id="table-p2" class="py-3 px-3 text-right font-extrabold text-blue-600">0.0%</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-3 font-black text-amber-600">03</td>
+                <td class="py-3 px-3">
+                  <p class="font-extrabold text-play-dark">Ravel Fulvi Algha Yapiawan</p>
+                  <p class="text-[11px] text-play-subtle">& Catharina Putri Chavella K.</p>
+                </td>
+                <td id="table-v3" class="py-3 px-3 text-center font-bold text-sm">0</td>
+                <td id="table-p3" class="py-3 px-3 text-right font-extrabold text-amber-600">0.0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RECENT ACTIVITY LOG -->
+      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
+          <h2 class="text-sm font-extrabold text-play-dark">Aktivitas Suara Terbaru</h2>
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+
+        <div id="recent-logs-container" class="space-y-3 text-xs">
+          <p class="text-play-subtle text-center py-6">Memuat aktivitas terbaru...</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+<script>
+  // Salin Web App URL Google Apps Script Anda ke sini
+  const SCRIPT_URL = "PASTE_URL_WEB_APP_APPS_SCRIPT_DI_SINI";
+
+  let barChartInstance = null;
+  let doughnutChartInstance = null;
+
+  window.onload = function() {
+    initCharts();
+    fetchStats();
+    // Auto-refresh setiap 5 detik
+    setInterval(fetchStats, 5000);
+  };
+
+  function initCharts() {
+    // Bar Chart Setup
+    const ctxBar = document.getElementById('barChart').getContext('2d');
+    barChartInstance = new Chart(ctxBar, {
+      type: 'bar',
+      data: {
+        labels: ['Paslon 01', 'Paslon 02', 'Paslon 03'],
+        datasets: [{
+          label: 'Jumlah Suara',
+          data: [0, 0, 0],
+          backgroundColor: [
+            '#01875F', // Emerald Green
+            '#1A73E8', // Royal Blue
+            '#F59E0B'  // Amber Orange
+          ],
+          borderRadius: 12,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { precision: 0, font: { family: 'Plus Jakarta Sans' } }
+          },
+          x: {
+            ticks: { font: { family: 'Plus Jakarta Sans', weight: 'bold' } }
+          }
+        }
+      }
+    });
+
+    // Doughnut Chart Setup
+    const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+    doughnutChartInstance = new Chart(ctxDoughnut, {
+      type: 'doughnut',
+      data: {
+        labels: ['Paslon 01', 'Paslon 02', 'Paslon 03'],
+        datasets: [{
+          data: [0, 0, 0],
+          backgroundColor: ['#01875F', '#1A73E8', '#F59E0B'],
+          borderWidth: 3,
+          borderColor: '#FFFFFF'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { font: { family: 'Plus Jakarta Sans', weight: 'bold', size: 11 } }
+          }
+        },
+        cutout: '70%'
+      }
+    });
+  }
+
+  async function fetchStats() {
+    const refreshIcon = document.getElementById('refresh-icon');
+    if (refreshIcon) refreshIcon.classList.add('animate-spin');
+
+    try {
+      const response = await fetch(`${SCRIPT_URL}?action=getStats`);
+      const data = await response.json();
+
+      if (data.success) {
+        updateDashboardUI(data);
+      }
+    } catch (err) {
+      console.error("Gagal mengambil data statistik:", err);
+    } finally {
+      if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+    }
+  }
+
+  function updateDashboardUI(data) {
+    const v1 = data.paslon1 || 0;
+    const v2 = data.paslon2 || 0;
+    const v3 = data.paslon3 || 0;
+    const total = data.totalVotes || 0;
+
+    // 1. KPI Cards Update
+    document.getElementById('stat-total-votes').innerText = total.toLocaleString('id-ID');
+    document.getElementById('stat-last-update').innerText = 'Updated: ' + new Date().toLocaleTimeString('id-ID');
+
+    // Menentukan paslon unggul
+    let leaderText = "-";
+    let leaderVotes = 0;
+    if (total > 0) {
+      if (v1 >= v2 && v1 >= v3) {
+        leaderText = "Paslon 01";
+        leaderVotes = v1;
+      } else if (v2 >= v1 && v2 >= v3) {
+        leaderText = "Paslon 02";
+        leaderVotes = v2;
+      } else {
+        leaderText = "Paslon 03";
+        leaderVotes = v3;
+      }
+    }
+    document.getElementById('stat-leader').innerText = leaderText;
+    document.getElementById('stat-leader-votes').innerText = leaderVotes + " Suara";
+
+    // 2. Charts Update
+    barChartInstance.data.datasets[0].data = [v1, v2, v3];
+    barChartInstance.update();
+
+    doughnutChartInstance.data.datasets[0].data = [v1, v2, v3];
+    doughnutChartInstance.update();
+
+    // 3. Table Breakdown Update
+    document.getElementById('table-v1').innerText = v1;
+    document.getElementById('table-v2').innerText = v2;
+    document.getElementById('table-v3').innerText = v3;
+
+    const p1 = total > 0 ? ((v1 / total) * 100).toFixed(1) : "0.0";
+    const p2 = total > 0 ? ((v2 / total) * 100).toFixed(1) : "0.0";
+    const p3 = total > 0 ? ((v3 / total) * 100).toFixed(1) : "0.0";
+
+    document.getElementById('table-p1').innerText = p1 + "%";
+    document.getElementById('table-p2').innerText = p2 + "%";
+    document.getElementById('table-p3').innerText = p3 + "%";
+
+    // 4. Recent Logs Update
+    const logContainer = document.getElementById('recent-logs-container');
+    if (data.recentLogs && data.recentLogs.length > 0) {
+      logContainer.innerHTML = data.recentLogs.map(log => `
+        <div class="flex items-center justify-between p-2.5 bg-play-bg rounded-xl border border-play-border">
+          <div class="flex items-center space-x-2.5 min-w-0">
+            <span class="w-6 h-6 rounded-lg font-black text-[10px] flex items-center justify-center text-white ${
+              log.choice === 1 ? 'bg-emerald-600' : log.choice === 2 ? 'bg-blue-600' : 'bg-amber-600'
+            }">0${log.choice}</span>
+            <span class="font-bold text-play-dark truncate">${log.email}</span>
+          </div>
+          <span class="text-[10px] font-semibold text-play-subtle flex-shrink-0 ml-2">${log.time}</span>
+        </div>
+      `).join('');
+    } else {
+      logContainer.innerHTML = `<p class="text-play-subtle text-center py-6">Belum ada suara masuk.</p>`;
+    }
+  }
+</script>
+
+</body>
+</html>
