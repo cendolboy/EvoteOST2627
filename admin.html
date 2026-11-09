@@ -265,6 +265,8 @@
 
 <script>
   const ADMIN_PIN = "070922";
+  
+  // Ganti dengan Web App URL Google Apps Script Anda
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyflJqDgMRUAoZE--zkct-IzUXZz4PxRlzSQPKFb7NqldNPNMlJZ4KkxFC9MVjmtt7Z/exec";
 
   let barChartInstance = null;
@@ -314,7 +316,6 @@
   }
 
   function initCharts() {
-    // Grouped Bar Chart (Sah vs Tidak Sah)
     const ctxBar = document.getElementById('barChart').getContext('2d');
     barChartInstance = new Chart(ctxBar, {
       type: 'bar',
@@ -322,7 +323,7 @@
         labels: ['Paslon 01', 'Paslon 02', 'Paslon 03'],
         datasets: [
           {
-            label: 'Suara Sah (@smatalenta)',
+            label: 'Suara Sah (@smatalenta.sch.id)',
             data: [0, 0, 0],
             backgroundColor: '#01875F',
             borderRadius: 8
@@ -348,7 +349,6 @@
       }
     });
 
-    // Doughnut Chart (Suara Sah Only)
     const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
     doughnutChartInstance = new Chart(ctxDoughnut, {
       type: 'doughnut',
@@ -387,19 +387,37 @@
     }
   }
 
+  // Fungsi helper aman untuk mengekstrak data paslon (Object vs Number)
+  function parsePaslon(paslonData) {
+    if (typeof paslonData === 'object' && paslonData !== null) {
+      return {
+        valid: Number(paslonData.valid) || 0,
+        invalid: Number(paslonData.invalid) || 0,
+        total: Number(paslonData.total) || ((Number(paslonData.valid) || 0) + (Number(paslonData.invalid) || 0))
+      };
+    }
+    const val = Number(paslonData) || 0;
+    return { valid: val, invalid: 0, total: val };
+  }
+
+  function setElText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.innerText = value;
+  }
+
   function updateDashboardUI(data) {
-    const p1 = data.paslon1 || { valid: 0, invalid: 0, total: 0 };
-    const p2 = data.paslon2 || { valid: 0, invalid: 0, total: 0 };
-    const p3 = data.paslon3 || { valid: 0, invalid: 0, total: 0 };
+    const p1 = parsePaslon(data.paslon1);
+    const p2 = parsePaslon(data.paslon2);
+    const p3 = parsePaslon(data.paslon3);
 
-    const totalVotes = data.totalVotes || 0;
-    const totalValid = data.totalValid || 0;
-    const totalInvalid = data.totalInvalid || 0;
+    const totalValid = data.totalValid !== undefined ? Number(data.totalValid) : (p1.valid + p2.valid + p3.valid);
+    const totalInvalid = data.totalInvalid !== undefined ? Number(data.totalInvalid) : (p1.invalid + p2.invalid + p3.invalid);
+    const totalVotes = data.totalVotes !== undefined ? Number(data.totalVotes) : (totalValid + totalInvalid);
 
-    // 1. KPI Cards
-    document.getElementById('stat-total-votes').innerText = totalVotes.toLocaleString('id-ID');
-    document.getElementById('stat-valid-votes').innerText = totalValid.toLocaleString('id-ID');
-    document.getElementById('stat-invalid-votes').innerText = totalInvalid.toLocaleString('id-ID');
+    // 1. Update KPI Summary Cards
+    setElText('stat-total-votes', totalVotes.toLocaleString('id-ID'));
+    setElText('stat-valid-votes', totalValid.toLocaleString('id-ID'));
+    setElText('stat-invalid-votes', totalInvalid.toLocaleString('id-ID'));
 
     let leaderText = "-";
     let leaderVotes = 0;
@@ -408,51 +426,67 @@
       else if (p2.valid >= p1.valid && p2.valid >= p3.valid) { leaderText = "Paslon 02"; leaderVotes = p2.valid; }
       else { leaderText = "Paslon 03"; leaderVotes = p3.valid; }
     }
-    document.getElementById('stat-leader').innerText = leaderText;
-    document.getElementById('stat-leader-votes').innerText = leaderVotes + " Suara Sah";
+    setElText('stat-leader', leaderText);
+    setElText('stat-leader-votes', leaderVotes + " Suara Sah");
 
-    // 2. Grafik Update
-    barChartInstance.data.datasets[0].data = [p1.valid, p2.valid, p3.valid];
-    barChartInstance.data.datasets[1].data = [p1.invalid, p2.invalid, p3.invalid];
-    barChartInstance.update();
+    // 2. Update Charts
+    if (barChartInstance) {
+      barChartInstance.data.datasets[0].data = [p1.valid, p2.valid, p3.valid];
+      if (barChartInstance.data.datasets[1]) {
+        barChartInstance.data.datasets[1].data = [p1.invalid, p2.invalid, p3.invalid];
+      }
+      barChartInstance.update();
+    }
 
-    doughnutChartInstance.data.datasets[0].data = [p1.valid, p2.valid, p3.valid];
-    doughnutChartInstance.update();
+    if (doughnutChartInstance) {
+      doughnutChartInstance.data.datasets[0].data = [p1.valid, p2.valid, p3.valid];
+      doughnutChartInstance.update();
+    }
 
-    // 3. Tabel Rekap Paslon Update
-    document.getElementById('p1-valid').innerText = p1.valid;
-    document.getElementById('p1-invalid').innerText = p1.invalid;
-    document.getElementById('p1-total').innerText = p1.total;
-    document.getElementById('p1-percent').innerText = totalValid > 0 ? ((p1.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%";
+    // 3. Update Tabel Rekapitulasi Paslon
+    setElText('p1-valid', p1.valid);
+    setElText('p1-invalid', p1.invalid);
+    setElText('p1-total', p1.total);
+    setElText('p1-percent', totalValid > 0 ? ((p1.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%");
 
-    document.getElementById('p2-valid').innerText = p2.valid;
-    document.getElementById('p2-invalid').innerText = p2.invalid;
-    document.getElementById('p2-total').innerText = p2.total;
-    document.getElementById('p2-percent').innerText = totalValid > 0 ? ((p2.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%";
+    setElText('p2-valid', p2.valid);
+    setElText('p2-invalid', p2.invalid);
+    setElText('p2-total', p2.total);
+    setElText('p2-percent', totalValid > 0 ? ((p2.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%");
 
-    document.getElementById('p3-valid').innerText = p3.valid;
-    document.getElementById('p3-invalid').innerText = p3.invalid;
-    document.getElementById('p3-total').innerText = p3.total;
-    document.getElementById('p3-percent').innerText = totalValid > 0 ? ((p3.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%";
+    setElText('p3-valid', p3.valid);
+    setElText('p3-invalid', p3.invalid);
+    setElText('p3-total', p3.total);
+    setElText('p3-percent', totalValid > 0 ? ((p3.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%");
 
-    // 4. Tabel Email Tidak Sah Update
-    document.getElementById('badge-invalid-count').innerText = totalInvalid;
+    // Dukungan untuk ID tabel versi sebelumnya (jika ada)
+    setElText('table-v1', p1.valid);
+    setElText('table-v2', p2.valid);
+    setElText('table-v3', p3.valid);
+    setElText('table-p1', totalValid > 0 ? ((p1.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%");
+    setElText('table-p2', totalValid > 0 ? ((p2.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%");
+    setElText('table-p3', totalValid > 0 ? ((p3.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%");
+
+    // 4. Update Tabel Email Tidak Sah
+    setElText('badge-invalid-count', totalInvalid);
     const invalidTbody = document.getElementById('invalid-table-body');
-    if (data.invalidLogs && data.invalidLogs.length > 0) {
-      invalidTbody.innerHTML = data.invalidLogs.map(log => `
-        <tr class="hover:bg-red-50/40">
-          <td class="py-3 px-3 font-semibold text-slate-500">${log.time}</td>
-          <td class="py-3 px-3 font-black text-red-900">${log.email}</td>
-          <td class="py-3 px-3 text-center">
-            <span class="inline-block px-2.5 py-0.5 rounded-full font-black text-[10px] text-white ${
-              log.choice === 1 ? 'bg-emerald-600' : log.choice === 2 ? 'bg-blue-600' : 'bg-amber-600'
-            }">Paslon 0${log.choice}</span>
-          </td>
-          <td class="py-3 px-3 text-right font-extrabold text-red-600">${log.reason}</td>
-        </tr>
-      `).join('');
-    } else {
-      invalidTbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-play-subtle">Tidak ada suara tidak sah. Semua pemilih menggunakan domain @smatalenta.sch.id</td></tr>`;
+    if (invalidTbody) {
+      if (data.invalidLogs && data.invalidLogs.length > 0) {
+        invalidTbody.innerHTML = data.invalidLogs.map(log => `
+          <tr class="hover:bg-red-50/40">
+            <td class="py-3 px-3 font-semibold text-slate-500">${log.time}</td>
+            <td class="py-3 px-3 font-black text-red-900">${log.email}</td>
+            <td class="py-3 px-3 text-center">
+              <span class="inline-block px-2.5 py-0.5 rounded-full font-black text-[10px] text-white ${
+                log.choice === 1 ? 'bg-emerald-600' : log.choice === 2 ? 'bg-blue-600' : 'bg-amber-600'
+              }">Paslon 0${log.choice}</span>
+            </td>
+            <td class="py-3 px-3 text-right font-extrabold text-red-600">${log.reason}</td>
+          </tr>
+        `).join('');
+      } else {
+        invalidTbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-play-subtle">Tidak ada suara tidak sah. Semua pemilih menggunakan domain @smatalenta.sch.id</td></tr>`;
+      }
     }
   }
 </script>
