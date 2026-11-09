@@ -48,204 +48,280 @@
 </head>
 <body class="min-h-screen bg-play-bg">
 
-  <!-- TOP NAVBAR -->
-  <header class="bg-play-card border-b border-play-border sticky top-0 z-30 play-card-shadow">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-xl bg-play-green text-white font-black flex items-center justify-center text-sm shadow-sm">
-          ST
-        </div>
-        <div>
-          <h1 class="text-base font-extrabold text-play-dark leading-tight flex items-center space-x-2">
-            <span>Dashboard Perhitungan Suara</span>
-            <span class="text-[10px] bg-play-green-mint text-play-green border border-play-green/20 px-2 py-0.5 rounded-full font-bold">LIVE</span>
-          </h1>
-          <p class="text-xs font-medium text-play-subtle">OST E-Vote SMA Talenta Bandung • TP 2027/2028</p>
-        </div>
+  <!-- MODAL PROTEKSI PIN ADMIN -->
+  <div id="pin-modal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-play-card border border-play-border rounded-3xl p-6 sm:p-8 max-w-sm w-full play-card-shadow-lg text-center space-y-5">
+      <div class="w-16 h-16 bg-play-green-mint text-play-green border border-play-green/30 rounded-2xl flex items-center justify-center mx-auto shadow-sm">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+        </svg>
       </div>
 
-      <div class="flex items-center space-x-3">
-        <div class="hidden sm:flex items-center space-x-2 bg-play-bg px-3 py-1.5 rounded-xl border border-play-border">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-          <span class="text-xs font-bold text-play-subtle">Auto Sync 5s</span>
+      <div>
+        <h2 class="text-xl font-black text-play-dark">Akses Terkunci</h2>
+        <p class="text-xs text-play-subtle mt-1 font-medium">Masukkan PIN Keamanan Panitia untuk melihat Dashboard Real-time OST E-Vote</p>
+      </div>
+
+      <form onsubmit="verifyPin(event)" class="space-y-4">
+        <div>
+          <input type="password" id="pin-input" maxlength="6" placeholder="Masukkan 6 Digit PIN" 
+            class="w-full text-center tracking-widest text-lg font-black py-3 px-4 border border-play-border rounded-xl focus:outline-none focus:border-play-green bg-play-bg">
+          <p id="pin-error" class="text-[11px] font-extrabold text-red-600 mt-1.5 hidden">PIN salah! Akses ditolak.</p>
         </div>
-        <button onclick="fetchStats()" class="bg-play-green hover:bg-play-green-dark text-white font-bold text-xs py-2 px-3.5 rounded-xl shadow-sm transition-all flex items-center space-x-1.5 active:scale-95">
-          <svg id="refresh-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-          <span>Refresh</span>
+
+        <button type="submit" class="w-full bg-play-green hover:bg-play-green-dark text-white font-extrabold text-sm py-3.5 px-4 rounded-xl shadow-md transition-all active:scale-[0.98]">
+          Buka Akses Dashboard
         </button>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
-    <!-- KPI CARDS SUMMARY -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      </form>
       
-      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
-        <div>
-          <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Total Suara Masuk</p>
-          <h3 id="stat-total-votes" class="text-3xl font-black text-play-dark mt-1">0</h3>
-          <p class="text-[11px] text-emerald-600 font-semibold mt-1">Terverifikasi di Spreadsheet</p>
-        </div>
-        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center font-bold">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        </div>
-      </div>
-
-      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
-        <div>
-          <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Kandidat Unggul</p>
-          <h3 id="stat-leader" class="text-xl font-black text-play-green mt-1">-</h3>
-          <p id="stat-leader-votes" class="text-[11px] text-play-subtle font-semibold mt-1">0 Suara</p>
-        </div>
-        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center font-bold">
-          🏆
-        </div>
-      </div>
-
-      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
-        <div>
-          <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Status Server API</p>
-          <h3 class="text-lg font-extrabold text-emerald-600 mt-1 flex items-center space-x-1.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-            <span>Online</span>
-          </h3>
-          <p id="stat-last-update" class="text-[11px] text-play-subtle font-medium mt-1">Updated: -</p>
-        </div>
-        <div class="w-12 h-12 bg-blue-50 text-play-blue rounded-2xl flex items-center justify-center font-bold">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-        </div>
-      </div>
-
-      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
-        <div>
-          <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Pengembang Sistem</p>
-          <h3 class="text-lg font-black text-play-dark mt-1">Pa Amos</h3>
-          <p class="text-[11px] text-play-subtle font-semibold mt-1">SMA Talenta Bandung</p>
-        </div>
-        <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center font-bold">
-          👨‍💻
-        </div>
-      </div>
-
+      <p class="text-[10px] font-bold text-play-subtle">OST E-Vote • SMA Talenta Bandung</p>
     </div>
+  </div>
 
-    <!-- CHARTS SECTION -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      
-      <!-- BAR CHART -->
-      <div class="lg:col-span-2 bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex flex-col justify-between">
-        <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
-          <div>
-            <h2 class="text-sm font-extrabold text-play-dark">Perbandingan Suara Pasangan Calon</h2>
-            <p class="text-xs text-play-subtle">Grafik batang perolehan jumlah suara fisik secara akumulatif</p>
+  <!-- CONTENT DASHBOARD (SEMBUNYI HINGGA PIN BENAR) -->
+  <div id="admin-content" style="display: none;">
+    <!-- TOP NAVBAR -->
+    <header class="bg-play-card border-b border-play-border sticky top-0 z-30 play-card-shadow">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-play-green text-white font-black flex items-center justify-center text-sm shadow-sm">
+            ST
           </div>
-          <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Bar Chart</span>
-        </div>
-        <div class="h-64 sm:h-80 relative">
-          <canvas id="barChart"></canvas>
-        </div>
-      </div>
-
-      <!-- DOUGHNUT CHART -->
-      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex flex-col justify-between">
-        <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
           <div>
-            <h2 class="text-sm font-extrabold text-play-dark">Persentase Perolehan Suara</h2>
-            <p class="text-xs text-play-subtle">Proporsi (%) dari total pemilih</p>
+            <h1 class="text-base font-extrabold text-play-dark leading-tight flex items-center space-x-2">
+              <span>Dashboard Perhitungan Suara</span>
+              <span class="text-[10px] bg-play-green-mint text-play-green border border-play-green/20 px-2 py-0.5 rounded-full font-bold">LIVE</span>
+            </h1>
+            <p class="text-xs font-medium text-play-subtle">OST E-Vote SMA Talenta Bandung • TP 2027/2028</p>
           </div>
-          <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Share %</span>
-        </div>
-        <div class="h-64 sm:h-80 relative flex items-center justify-center">
-          <canvas id="doughnutChart"></canvas>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- CANDIDATE BREAKDOWN TABLE & LIVE LOG -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      
-      <!-- CANDIDATE DETAILS TABLE -->
-      <div class="lg:col-span-2 bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
-        <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
-          <h2 class="text-sm font-extrabold text-play-dark">Rincian Pasangan Calon</h2>
-          <span class="text-xs font-bold text-play-green bg-play-green-mint px-2.5 py-0.5 rounded-full border border-play-green/20">3 Paslon</span>
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="text-play-subtle uppercase border-b border-play-border bg-play-bg">
-                <th class="py-3 px-3 rounded-l-xl">No</th>
-                <th class="py-3 px-3">Pasangan Calon</th>
-                <th class="py-3 px-3 text-center">Jumlah Suara</th>
-                <th class="py-3 px-3 text-right rounded-r-xl">Persentase</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-play-border font-medium">
-              <tr>
-                <td class="py-3 px-3 font-black text-emerald-600">01</td>
-                <td class="py-3 px-3">
-                  <p class="font-extrabold text-play-dark">Karenn Aeleena Nicole</p>
-                  <p class="text-[11px] text-play-subtle">& Kenneth Richie Sabella</p>
-                </td>
-                <td id="table-v1" class="py-3 px-3 text-center font-bold text-sm">0</td>
-                <td id="table-p1" class="py-3 px-3 text-right font-extrabold text-emerald-600">0.0%</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-3 font-black text-blue-600">02</td>
-                <td class="py-3 px-3">
-                  <p class="font-extrabold text-play-dark">Xavier Lee Felton</p>
-                  <p class="text-[11px] text-play-subtle">& Muhammad Rafie Asmoro</p>
-                </td>
-                <td id="table-v2" class="py-3 px-3 text-center font-bold text-sm">0</td>
-                <td id="table-p2" class="py-3 px-3 text-right font-extrabold text-blue-600">0.0%</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-3 font-black text-amber-600">03</td>
-                <td class="py-3 px-3">
-                  <p class="font-extrabold text-play-dark">Ravel Fulvi Algha Yapiawan</p>
-                  <p class="text-[11px] text-play-subtle">& Catharina Putri Chavella K.</p>
-                </td>
-                <td id="table-v3" class="py-3 px-3 text-center font-bold text-sm">0</td>
-                <td id="table-p3" class="py-3 px-3 text-right font-extrabold text-amber-600">0.0%</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="flex items-center space-x-3">
+          <div class="hidden sm:flex items-center space-x-2 bg-play-bg px-3 py-1.5 rounded-xl border border-play-border">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+            <span class="text-xs font-bold text-play-subtle">Auto Sync 5s</span>
+          </div>
+          <button onclick="fetchStats()" class="bg-play-green hover:bg-play-green-dark text-white font-bold text-xs py-2 px-3.5 rounded-xl shadow-sm transition-all flex items-center space-x-1.5 active:scale-95">
+            <svg id="refresh-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            <span>Refresh</span>
+          </button>
+          <button onclick="lockAdmin()" title="Kunci Kembali" class="bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-600 font-bold text-xs p-2 rounded-xl border border-slate-200 transition-all">
+            🔒 Kunci
+          </button>
         </div>
       </div>
+    </header>
 
-      <!-- RECENT ACTIVITY LOG -->
-      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
-        <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
-          <h2 class="text-sm font-extrabold text-play-dark">Aktivitas Suara Terbaru</h2>
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+      <!-- KPI CARDS SUMMARY -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Total Suara Masuk</p>
+            <h3 id="stat-total-votes" class="text-3xl font-black text-play-dark mt-1">0</h3>
+            <p class="text-[11px] text-emerald-600 font-semibold mt-1">Terverifikasi di Spreadsheet</p>
+          </div>
+          <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center font-bold">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
         </div>
 
-        <div id="recent-logs-container" class="space-y-3 text-xs">
-          <p class="text-play-subtle text-center py-6">Memuat aktivitas terbaru...</p>
+        <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Kandidat Unggul</p>
+            <h3 id="stat-leader" class="text-xl font-black text-play-green mt-1">-</h3>
+            <p id="stat-leader-votes" class="text-[11px] text-play-subtle font-semibold mt-1">0 Suara</p>
+          </div>
+          <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center font-bold">
+            🏆
+          </div>
         </div>
+
+        <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Status Server API</p>
+            <h3 class="text-lg font-extrabold text-emerald-600 mt-1 flex items-center space-x-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span>Online</span>
+            </h3>
+            <p id="stat-last-update" class="text-[11px] text-play-subtle font-medium mt-1">Updated: -</p>
+          </div>
+          <div class="w-12 h-12 bg-blue-50 text-play-blue rounded-2xl flex items-center justify-center font-bold">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          </div>
+        </div>
+
+        <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Pengembang Sistem</p>
+            <h3 class="text-lg font-black text-play-dark mt-1">Pa Amos</h3>
+            <p class="text-[11px] text-play-subtle font-semibold mt-1">SMA Talenta Bandung</p>
+          </div>
+          <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center font-bold">
+            👨‍💻
+          </div>
+        </div>
+
       </div>
 
-    </div>
+      <!-- CHARTS SECTION -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- BAR CHART -->
+        <div class="lg:col-span-2 bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
+            <div>
+              <h2 class="text-sm font-extrabold text-play-dark">Perbandingan Suara Pasangan Calon</h2>
+              <p class="text-xs text-play-subtle">Grafik batang perolehan jumlah suara fisik secara akumulatif</p>
+            </div>
+            <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Bar Chart</span>
+          </div>
+          <div class="h-64 sm:h-80 relative">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
 
-  </main>
+        <!-- DOUGHNUT CHART -->
+        <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
+            <div>
+              <h2 class="text-sm font-extrabold text-play-dark">Persentase Perolehan Suara</h2>
+              <p class="text-xs text-play-subtle">Proporsi (%) dari total pemilih</p>
+            </div>
+            <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Share %</span>
+          </div>
+          <div class="h-64 sm:h-80 relative flex items-center justify-center">
+            <canvas id="doughnutChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CANDIDATE BREAKDOWN TABLE & LIVE LOG -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- CANDIDATE DETAILS TABLE -->
+        <div class="lg:col-span-2 bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
+            <h2 class="text-sm font-extrabold text-play-dark">Rincian Pasangan Calon</h2>
+            <span class="text-xs font-bold text-play-green bg-play-green-mint px-2.5 py-0.5 rounded-full border border-play-green/20">3 Paslon</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="text-play-subtle uppercase border-b border-play-border bg-play-bg">
+                  <th class="py-3 px-3 rounded-l-xl">No</th>
+                  <th class="py-3 px-3">Pasangan Calon</th>
+                  <th class="py-3 px-3 text-center">Jumlah Suara</th>
+                  <th class="py-3 px-3 text-right rounded-r-xl">Persentase</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-play-border font-medium">
+                <tr>
+                  <td class="py-3 px-3 font-black text-emerald-600">01</td>
+                  <td class="py-3 px-3">
+                    <p class="font-extrabold text-play-dark">Karenn Aeleena Nicole</p>
+                    <p class="text-[11px] text-play-subtle">& Kenneth Richie Sabella</p>
+                  </td>
+                  <td id="table-v1" class="py-3 px-3 text-center font-bold text-sm">0</td>
+                  <td id="table-p1" class="py-3 px-3 text-right font-extrabold text-emerald-600">0.0%</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-3 font-black text-blue-600">02</td>
+                  <td class="py-3 px-3">
+                    <p class="font-extrabold text-play-dark">Xavier Lee Felton</p>
+                    <p class="text-[11px] text-play-subtle">& Muhammad Rafie Asmoro</p>
+                  </td>
+                  <td id="table-v2" class="py-3 px-3 text-center font-bold text-sm">0</td>
+                  <td id="table-p2" class="py-3 px-3 text-right font-extrabold text-blue-600">0.0%</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-3 font-black text-amber-600">03</td>
+                  <td class="py-3 px-3">
+                    <p class="font-extrabold text-play-dark">Ravel Fulvi Algha Yapiawan</p>
+                    <p class="text-[11px] text-play-subtle">& Catharina Putri Chavella K.</p>
+                  </td>
+                  <td id="table-v3" class="py-3 px-3 text-center font-bold text-sm">0</td>
+                  <td id="table-p3" class="py-3 px-3 text-right font-extrabold text-amber-600">0.0%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RECENT ACTIVITY LOG -->
+        <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
+            <h2 class="text-sm font-extrabold text-play-dark">Aktivitas Suara Terbaru</h2>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          </div>
+
+          <div id="recent-logs-container" class="space-y-3 text-xs">
+            <p class="text-play-subtle text-center py-6">Memuat aktivitas terbaru...</p>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
 
 <script>
+  // PIN Rahasia Admin
+  const ADMIN_PIN = "070922";
+  
   // Salin Web App URL Google Apps Script Anda ke sini
-  const SCRIPT_URL = "PASTE_URL_WEB_APP_APPS_SCRIPT_DI_SINI";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyflJqDgMRUAoZE--zkct-IzUXZz4PxRlzSQPKFb7NqldNPNMlJZ4KkxFC9MVjmtt7Z/exec";
 
   let barChartInstance = null;
   let doughnutChartInstance = null;
+  let autoRefreshInterval = null;
 
   window.onload = function() {
-    initCharts();
-    fetchStats();
-    // Auto-refresh setiap 5 detik
-    setInterval(fetchStats, 5000);
+    // Cek jika sudah terotentikasi dalam sesi ini
+    if (sessionStorage.getItem('admin_authenticated') === 'true') {
+      unlockDashboard();
+    }
   };
+
+  function verifyPin(event) {
+    event.preventDefault();
+    const pinInput = document.getElementById('pin-input').value.trim();
+    const errorMsg = document.getElementById('pin-error');
+
+    if (pinInput === ADMIN_PIN) {
+      errorMsg.classList.add('hidden');
+      sessionStorage.setItem('admin_authenticated', 'true');
+      unlockDashboard();
+    } else {
+      errorMsg.classList.remove('hidden');
+      document.getElementById('pin-input').value = '';
+      document.getElementById('pin-input').focus();
+    }
+  }
+
+  function unlockDashboard() {
+    document.getElementById('pin-modal').style.display = 'none';
+    document.getElementById('admin-content').style.display = 'block';
+
+    if (!barChartInstance) {
+      initCharts();
+      fetchStats();
+      if (!autoRefreshInterval) {
+        autoRefreshInterval = setInterval(fetchStats, 5000);
+      }
+    }
+  }
+
+  function lockAdmin() {
+    sessionStorage.removeItem('admin_authenticated');
+    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+    location.reload();
+  }
 
   function initCharts() {
     // Bar Chart Setup
@@ -257,11 +333,7 @@
         datasets: [{
           label: 'Jumlah Suara',
           data: [0, 0, 0],
-          backgroundColor: [
-            '#01875F', // Emerald Green
-            '#1A73E8', // Royal Blue
-            '#F59E0B'  // Amber Orange
-          ],
+          backgroundColor: ['#01875F', '#1A73E8', '#F59E0B'],
           borderRadius: 12,
           borderSkipped: false
         }]
@@ -269,17 +341,10 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false }
-        },
+        plugins: { legend: { display: false } },
         scales: {
-          y: {
-            beginAtZero: true,
-            ticks: { precision: 0, font: { family: 'Plus Jakarta Sans' } }
-          },
-          x: {
-            ticks: { font: { family: 'Plus Jakarta Sans', weight: 'bold' } }
-          }
+          y: { beginAtZero: true, ticks: { precision: 0, font: { family: 'Plus Jakarta Sans' } } },
+          x: { ticks: { font: { family: 'Plus Jakarta Sans', weight: 'bold' } } }
         }
       }
     });
@@ -335,11 +400,9 @@
     const v3 = data.paslon3 || 0;
     const total = data.totalVotes || 0;
 
-    // 1. KPI Cards Update
     document.getElementById('stat-total-votes').innerText = total.toLocaleString('id-ID');
     document.getElementById('stat-last-update').innerText = 'Updated: ' + new Date().toLocaleTimeString('id-ID');
 
-    // Menentukan paslon unggul
     let leaderText = "-";
     let leaderVotes = 0;
     if (total > 0) {
@@ -357,14 +420,12 @@
     document.getElementById('stat-leader').innerText = leaderText;
     document.getElementById('stat-leader-votes').innerText = leaderVotes + " Suara";
 
-    // 2. Charts Update
     barChartInstance.data.datasets[0].data = [v1, v2, v3];
     barChartInstance.update();
 
     doughnutChartInstance.data.datasets[0].data = [v1, v2, v3];
     doughnutChartInstance.update();
 
-    // 3. Table Breakdown Update
     document.getElementById('table-v1').innerText = v1;
     document.getElementById('table-v2').innerText = v2;
     document.getElementById('table-v3').innerText = v3;
@@ -377,7 +438,6 @@
     document.getElementById('table-p2').innerText = p2 + "%";
     document.getElementById('table-p3').innerText = p3 + "%";
 
-    // 4. Recent Logs Update
     const logContainer = document.getElementById('recent-logs-container');
     if (data.recentLogs && data.recentLogs.length > 0) {
       logContainer.innerHTML = data.recentLogs.map(log => `
