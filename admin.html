@@ -139,7 +139,62 @@
 
       </div>
 
-      <!-- GRAFIK PEROLEHAN SUARA -->
+      <!-- WIDGET PENDEKATAN A: PANGSA SUARA SAH NASIONAL / SEKOLAH (SHARE OF VALID VOTES) -->
+      <div class="bg-play-card border border-emerald-200 rounded-2xl p-5 play-card-shadow space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-play-border pb-3">
+          <div>
+            <h2 class="text-sm font-extrabold text-play-dark flex items-center space-x-2">
+              <span>Widget Standar Pemilu (Pendekatan A) — Pangsa Suara Sah</span>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-bold">Penentu Kemenangan</span>
+            </h2>
+            <p class="text-xs text-play-subtle">Persentase dihitung dari <strong>Total Suara Sah Seluruh Sekolah</strong> (Total = 100%)</p>
+          </div>
+          <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Perolehan Sah</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- PASLON 01 WIDGET A -->
+          <div class="bg-emerald-50/40 border border-emerald-200 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-emerald-800">Paslon 01</span>
+              <span id="widgetA-p1-share" class="text-lg font-black text-emerald-600">0.0%</span>
+            </div>
+            <p class="text-[11px] font-semibold text-play-subtle">Karenn Aeleena N. & Kenneth Richie S.</p>
+            <div class="w-full bg-emerald-100 rounded-full h-2 overflow-hidden">
+              <div id="widgetA-p1-bar" class="bg-emerald-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <p class="text-[10px] text-emerald-700 font-bold text-right"><span id="widgetA-p1-count">0</span> Suara Sah</p>
+          </div>
+
+          <!-- PASLON 02 WIDGET A -->
+          <div class="bg-blue-50/40 border border-blue-200 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-blue-800">Paslon 02</span>
+              <span id="widgetA-p2-share" class="text-lg font-black text-blue-600">0.0%</span>
+            </div>
+            <p class="text-[11px] font-semibold text-play-subtle">Xavier Lee F. & Muhammad Rafie A.</p>
+            <div class="w-full bg-blue-100 rounded-full h-2 overflow-hidden">
+              <div id="widgetA-p2-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <p class="text-[10px] text-blue-700 font-bold text-right"><span id="widgetA-p2-count">0</span> Suara Sah</p>
+          </div>
+
+          <!-- PASLON 03 WIDGET A -->
+          <div class="bg-amber-50/40 border border-amber-200 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-amber-800">Paslon 03</span>
+              <span id="widgetA-p3-share" class="text-lg font-black text-amber-600">0.0%</span>
+            </div>
+            <p class="text-[11px] font-semibold text-play-subtle">Ravel Fulvi A. Y. & Catharina Putri C. K.</p>
+            <div class="w-full bg-amber-100 rounded-full h-2 overflow-hidden">
+              <div id="widgetA-p3-bar" class="bg-amber-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <p class="text-[10px] text-amber-700 font-bold text-right"><span id="widgetA-p3-count">0</span> Suara Sah</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRAFIK VISUALISASI -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
           <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
@@ -168,14 +223,17 @@
         </div>
       </div>
 
-      <!-- TABEL 1: RINCIAN SUARA SAH DAN TIDAK SAH PER PASLON -->
-      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
-        <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
+      <!-- TABEL RINCIAN HASIL (PENDEKATAN B — RASIO INTERNAL KEABSAHAN PASLON) -->
+      <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-play-border">
           <div>
-            <h2 class="text-sm font-extrabold text-play-dark">Rincian Hasil Pemungutan Suara Per Paslon</h2>
-            <p class="text-xs text-play-subtle">Perhitungan statistik suara sah dan tidak sah tiap pasangan calon</p>
+            <h2 class="text-sm font-extrabold text-play-dark flex items-center space-x-2">
+              <span>Rincian Kerapihan & Keabsahan Suara (Pendekatan B)</span>
+              <span class="text-[10px] bg-blue-100 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-full font-bold">Rasio Internal Paslon</span>
+            </h2>
+            <p class="text-xs text-play-subtle">Persentase dihitung terhadap <strong>Total Suara Masuk Paslon Itu Sendiri</strong> (% Sah + % Tidak Sah = 100%)</p>
           </div>
-          <span class="text-xs font-bold text-play-green bg-play-green-mint px-2.5 py-0.5 rounded-full border border-play-green/20">Rekap Resmi</span>
+          <span class="text-xs font-bold text-play-green bg-play-green-mint px-2.5 py-0.5 rounded-full border border-play-green/20 self-start sm:self-auto">Audit Internal</span>
         </div>
 
         <div class="overflow-x-auto">
@@ -184,47 +242,67 @@
               <tr class="text-play-subtle uppercase border-b border-play-border bg-play-bg">
                 <th class="py-3 px-3">No</th>
                 <th class="py-3 px-3">Pasangan Calon</th>
-                <th class="py-3 px-3 text-center bg-emerald-50/50 text-emerald-800">Suara Sah</th>
-                <th class="py-3 px-3 text-center bg-red-50/50 text-red-800">Suara Tidak Sah</th>
-                <th class="py-3 px-3 text-center">Total Suara</th>
-                <th class="py-3 px-3 text-right">Persentase Sah</th>
+                <th class="py-3 px-3 text-center bg-emerald-50/60 text-emerald-900 border-l border-emerald-100">Suara Sah</th>
+                <th class="py-3 px-3 text-center bg-red-50/60 text-red-900 border-l border-red-100">Suara Tidak Sah</th>
+                <th class="py-3 px-3 text-center border-l border-slate-200">Total Paslon</th>
+                <th class="py-3 px-3 text-center bg-emerald-100/50 text-emerald-950 border-l border-emerald-200">% Sah (Internal)</th>
+                <th class="py-3 px-3 text-center bg-red-100/50 text-red-950 border-l border-red-200">% Tidak Sah (Internal)</th>
+                <th class="py-3 px-3 text-right bg-slate-100 text-slate-800 border-l border-slate-200">Total % Internal</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-play-border font-medium">
+              <!-- PASLON 01 PENDEKATAN B -->
               <tr>
                 <td class="py-3.5 px-3 font-black text-emerald-600">01</td>
                 <td class="py-3.5 px-3">
                   <p class="font-extrabold text-play-dark">Karenn Aeleena Nicole</p>
                   <p class="text-[11px] text-play-subtle">& Kenneth Richie Sabella</p>
                 </td>
-                <td id="p1-valid" class="py-3.5 px-3 text-center font-black text-emerald-600 text-sm bg-emerald-50/20">0</td>
-                <td id="p1-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-sm bg-red-50/20">0</td>
-                <td id="p1-total" class="py-3.5 px-3 text-center font-extrabold text-play-dark">0</td>
-                <td id="p1-percent" class="py-3.5 px-3 text-right font-black text-emerald-600 text-sm">0.0%</td>
+                <td id="p1-valid" class="py-3.5 px-3 text-center font-black text-emerald-600 text-sm bg-emerald-50/20 border-l border-emerald-100">0</td>
+                <td id="p1-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-sm bg-red-50/20 border-l border-red-100">0</td>
+                <td id="p1-total" class="py-3.5 px-3 text-center font-extrabold text-play-dark border-l border-slate-200">0</td>
+                <td id="p1-pctB-valid" class="py-3.5 px-3 text-center font-black text-emerald-600 text-sm bg-emerald-50/30 border-l border-emerald-200">0.0%</td>
+                <td id="p1-pctB-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-xs bg-red-50/30 border-l border-red-200">0.0%</td>
+                <td class="py-3.5 px-3 text-right font-black text-slate-700 text-xs bg-slate-50 border-l border-slate-200">100.0%</td>
               </tr>
+              <!-- PASLON 02 PENDEKATAN B -->
               <tr>
                 <td class="py-3.5 px-3 font-black text-blue-600">02</td>
                 <td class="py-3.5 px-3">
                   <p class="font-extrabold text-play-dark">Xavier Lee Felton</p>
                   <p class="text-[11px] text-play-subtle">& Muhammad Rafie Asmoro</p>
                 </td>
-                <td id="p2-valid" class="py-3.5 px-3 text-center font-black text-emerald-600 text-sm bg-emerald-50/20">0</td>
-                <td id="p2-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-sm bg-red-50/20">0</td>
-                <td id="p2-total" class="py-3.5 px-3 text-center font-extrabold text-play-dark">0</td>
-                <td id="p2-percent" class="py-3.5 px-3 text-right font-black text-blue-600 text-sm">0.0%</td>
+                <td id="p2-valid" class="py-3.5 px-3 text-center font-black text-emerald-600 text-sm bg-emerald-50/20 border-l border-emerald-100">0</td>
+                <td id="p2-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-sm bg-red-50/20 border-l border-red-100">0</td>
+                <td id="p2-total" class="py-3.5 px-3 text-center font-extrabold text-play-dark border-l border-slate-200">0</td>
+                <td id="p2-pctB-valid" class="py-3.5 px-3 text-center font-black text-blue-600 text-sm bg-emerald-50/30 border-l border-emerald-200">0.0%</td>
+                <td id="p2-pctB-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-xs bg-red-50/30 border-l border-red-200">0.0%</td>
+                <td class="py-3.5 px-3 text-right font-black text-slate-700 text-xs bg-slate-50 border-l border-slate-200">100.0%</td>
               </tr>
+              <!-- PASLON 03 PENDEKATAN B -->
               <tr>
                 <td class="py-3.5 px-3 font-black text-amber-600">03</td>
                 <td class="py-3.5 px-3">
                   <p class="font-extrabold text-play-dark">Ravel Fulvi Algha Yapiawan</p>
                   <p class="text-[11px] text-play-subtle">& Catharina Putri Chavella K.</p>
                 </td>
-                <td id="p3-valid" class="py-3.5 px-3 text-center font-black text-emerald-600 text-sm bg-emerald-50/20">0</td>
-                <td id="p3-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-sm bg-red-50/20">0</td>
-                <td id="p3-total" class="py-3.5 px-3 text-center font-extrabold text-play-dark">0</td>
-                <td id="p3-percent" class="py-3.5 px-3 text-right font-black text-amber-600 text-sm">0.0%</td>
+                <td id="p3-valid" class="py-3.5 px-3 text-center font-black text-emerald-600 text-sm bg-emerald-50/20 border-l border-emerald-100">0</td>
+                <td id="p3-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-sm bg-red-50/20 border-l border-red-100">0</td>
+                <td id="p3-total" class="py-3.5 px-3 text-center font-extrabold text-play-dark border-l border-slate-200">0</td>
+                <td id="p3-pctB-valid" class="py-3.5 px-3 text-center font-black text-amber-600 text-sm bg-emerald-50/30 border-l border-emerald-200">0.0%</td>
+                <td id="p3-pctB-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-xs bg-red-50/30 border-l border-red-200">0.0%</td>
+                <td class="py-3.5 px-3 text-right font-black text-slate-700 text-xs bg-slate-50 border-l border-slate-200">100.0%</td>
               </tr>
             </tbody>
+            <tfoot>
+              <tr class="bg-slate-100 font-extrabold border-t-2 border-play-border">
+                <td colspan="2" class="py-3 px-3 text-play-dark uppercase text-right">Total Akumulasi Seluruh Pemilu:</td>
+                <td id="summary-total-valid" class="py-3 px-3 text-center text-emerald-700 font-black border-l border-slate-300">0</td>
+                <td id="summary-total-invalid" class="py-3 px-3 text-center text-red-700 font-black border-l border-slate-300">0</td>
+                <td id="summary-total-all" class="py-3 px-3 text-center text-play-dark font-black border-l border-slate-300">0</td>
+                <td colspan="3" class="py-3 px-3 text-right text-slate-600 font-bold text-[11px] border-l border-slate-300">*Rasio dihitung terhadap total entri internal tiap paslon</td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>
@@ -319,7 +397,7 @@
   let barChartInstance = null;
   let doughnutChartInstance = null;
   let autoRefreshInterval = null;
-  let globalValidLogs = []; // Cache log suara sah untuk fitur search
+  let globalValidLogs = [];
 
   window.onload = function() {
     if (sessionStorage.getItem('admin_authenticated') === 'true') {
@@ -452,17 +530,22 @@
     if (el) el.innerText = value;
   }
 
+  function setElStyleWidth(id, pct) {
+    const el = document.getElementById(id);
+    if (el) el.style.width = pct + "%";
+  }
+
   function updateDashboardUI(data) {
     const p1 = parsePaslon(data.paslon1);
     const p2 = parsePaslon(data.paslon2);
     const p3 = parsePaslon(data.paslon3);
 
-    // Total Suara Sah murni hasil akumulasi sah 3 Paslon
+    // Total Suara Akumulatif
     const totalValid = p1.valid + p2.valid + p3.valid;
     const totalInvalid = p1.invalid + p2.invalid + p3.invalid;
     const totalVotes = totalValid + totalInvalid;
 
-    // 1. KPI Cards Update
+    // 1. KPI Cards
     setElText('stat-total-votes', totalVotes.toLocaleString('id-ID'));
     setElText('stat-valid-votes', totalValid.toLocaleString('id-ID'));
     setElText('stat-invalid-votes', totalInvalid.toLocaleString('id-ID'));
@@ -477,7 +560,24 @@
     setElText('stat-leader', leaderText);
     setElText('stat-leader-votes', leaderVotes + " Suara Sah");
 
-    // 2. Grafik Update
+    // 2. WIDGET PENDEKATAN A (PANGSA SUARA SAH DARI TOTAL SUARA SAH SELURUH SEKOLAH)
+    const pctA_p1 = totalValid > 0 ? ((p1.valid / totalValid) * 100).toFixed(1) : "0.0";
+    const pctA_p2 = totalValid > 0 ? ((p2.valid / totalValid) * 100).toFixed(1) : "0.0";
+    const pctA_p3 = totalValid > 0 ? ((p3.valid / totalValid) * 100).toFixed(1) : "0.0";
+
+    setElText('widgetA-p1-share', pctA_p1 + "%");
+    setElText('widgetA-p1-count', p1.valid);
+    setElStyleWidth('widgetA-p1-bar', pctA_p1);
+
+    setElText('widgetA-p2-share', pctA_p2 + "%");
+    setElText('widgetA-p2-count', p2.valid);
+    setElStyleWidth('widgetA-p2-bar', pctA_p2);
+
+    setElText('widgetA-p3-share', pctA_p3 + "%");
+    setElText('widgetA-p3-count', p3.valid);
+    setElStyleWidth('widgetA-p3-bar', pctA_p3);
+
+    // 3. Grafik Update
     if (barChartInstance) {
       barChartInstance.data.datasets[0].data = [p1.valid, p2.valid, p3.valid];
       if (barChartInstance.data.datasets[1]) {
@@ -491,33 +591,48 @@
       doughnutChartInstance.update();
     }
 
-    // 3. Kalkulasi Persentase Sah Akurat per Paslon dari Total Suara Sah
-    const pct1 = totalValid > 0 ? ((p1.valid / totalValid) * 100).toFixed(1) : "0.0";
-    const pct2 = totalValid > 0 ? ((p2.valid / totalValid) * 100).toFixed(1) : "0.0";
-    const pct3 = totalValid > 0 ? ((p3.valid / totalValid) * 100).toFixed(1) : "0.0";
+    // 4. TABEL PENDEKATAN B (KALKULASI RASIO KEABSAHAN INTERNAL TIAP PASLON)
+    const pctB_p1_valid = p1.total > 0 ? ((p1.valid / p1.total) * 100).toFixed(1) : "0.0";
+    const pctB_p1_invalid = p1.total > 0 ? ((p1.invalid / p1.total) * 100).toFixed(1) : "0.0";
 
-    // 4. Update Tabel Rekapitulasi Paslon
+    const pctB_p2_valid = p2.total > 0 ? ((p2.valid / p2.total) * 100).toFixed(1) : "0.0";
+    const pctB_p2_invalid = p2.total > 0 ? ((p2.invalid / p2.total) * 100).toFixed(1) : "0.0";
+
+    const pctB_p3_valid = p3.total > 0 ? ((p3.valid / p3.total) * 100).toFixed(1) : "0.0";
+    const pctB_p3_invalid = p3.total > 0 ? ((p3.invalid / p3.total) * 100).toFixed(1) : "0.0";
+
+    // Update Row Paslon 01
     setElText('p1-valid', p1.valid);
     setElText('p1-invalid', p1.invalid);
     setElText('p1-total', p1.total);
-    setElText('p1-percent', pct1 + "%");
+    setElText('p1-pctB-valid', pctB_p1_valid + "%");
+    setElText('p1-pctB-invalid', pctB_p1_invalid + "%");
 
+    // Update Row Paslon 02
     setElText('p2-valid', p2.valid);
     setElText('p2-invalid', p2.invalid);
     setElText('p2-total', p2.total);
-    setElText('p2-percent', pct2 + "%");
+    setElText('p2-pctB-valid', pctB_p2_valid + "%");
+    setElText('p2-pctB-invalid', pctB_p2_invalid + "%");
 
+    // Update Row Paslon 03
     setElText('p3-valid', p3.valid);
     setElText('p3-invalid', p3.invalid);
     setElText('p3-total', p3.total);
-    setElText('p3-percent', pct3 + "%");
+    setElText('p3-pctB-valid', pctB_p3_valid + "%");
+    setElText('p3-pctB-invalid', pctB_p3_invalid + "%");
 
-    // 5. Simpan Cache Log Suara Sah & Render Tabel dengan Filter
+    // Summary Footer
+    setElText('summary-total-valid', totalValid);
+    setElText('summary-total-invalid', totalInvalid);
+    setElText('summary-total-all', totalVotes);
+
+    // 5. Update Tabel Email Sah (@smatalenta.sch.id)
     globalValidLogs = data.validLogs || [];
     setElText('badge-valid-count', totalValid);
     filterValidLogs();
 
-    // 6. Render Tabel Email Tidak Sah
+    // 6. Update Tabel Email Tidak Sah
     setElText('badge-invalid-count', totalInvalid);
     const invalidTbody = document.getElementById('invalid-table-body');
     if (invalidTbody) {
@@ -540,7 +655,6 @@
     }
   }
 
-  // FUNGSI PENCARIAN REAL-TIME UNTUK EMAIL SAH
   function filterValidLogs() {
     const searchInput = document.getElementById('search-valid-input');
     const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
