@@ -50,18 +50,18 @@
 
       <div>
         <h2 class="text-xl font-black text-play-dark">Akses Terkunci</h2>
-        <p class="text-xs text-play-subtle mt-1 font-medium">Masukkan PIN Keamanan Panitia untuk melihat Dashboard Real-time</p>
+        <p class="text-xs text-play-subtle mt-1 font-medium">Masukkan PIN Keamanan Panitia untuk melihat Dashboard Admin</p>
       </div>
 
       <form onsubmit="verifyPin(event)" class="space-y-4">
         <div>
-          <input type="password" id="pin-input" maxlength="6" placeholder="Masukkan PIN 6 Digit" 
+          <input type="password" id="pin-input" maxlength="6" placeholder="Masukkan 6 Digit PIN" 
             class="w-full text-center tracking-widest text-lg font-black py-3 px-4 border border-play-border rounded-xl focus:outline-none focus:border-play-green bg-play-bg">
           <p id="pin-error" class="text-[11px] font-extrabold text-red-600 mt-1.5 hidden">PIN salah! Akses ditolak.</p>
         </div>
 
         <button type="submit" class="w-full bg-play-green hover:bg-play-green-dark text-white font-extrabold text-sm py-3.5 px-4 rounded-xl shadow-md transition-all active:scale-[0.98]">
-          Buka Akses Dashboard
+          Buka Dashboard
         </button>
       </form>
     </div>
@@ -76,10 +76,10 @@
           <div class="w-9 h-9 rounded-xl bg-play-green text-white font-black flex items-center justify-center text-sm shadow-sm">ST</div>
           <div>
             <h1 class="text-base font-extrabold text-play-dark leading-tight flex items-center space-x-2">
-              <span>Dashboard Rekapitulasi Suara</span>
+              <span>Rekapitulasi Suara OST E-Vote</span>
               <span class="text-[10px] bg-play-green-mint text-play-green border border-play-green/20 px-2 py-0.5 rounded-full font-bold">LIVE</span>
             </h1>
-            <p class="text-xs font-medium text-play-subtle">Domain Sah: <strong class="text-play-green">@smatalenta.sch.id</strong></p>
+            <p class="text-xs font-medium text-play-subtle">Domain Resmi Validasi: <strong class="text-play-green font-bold">@smatalenta.sch.id</strong></p>
           </div>
         </div>
 
@@ -97,39 +97,39 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-      <!-- KPI CARDS 4 KOLOM -->
+      <!-- KPI CARDS RINGKASAN SUARA -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Total Masuk</p>
+            <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Total Entri Masuk</p>
             <h3 id="stat-total-votes" class="text-3xl font-black text-play-dark mt-1">0</h3>
-            <p class="text-[11px] text-play-subtle font-medium mt-1">Semua Entri Sheet</p>
+            <p class="text-[11px] text-play-subtle font-medium mt-1">Seluruh Email</p>
           </div>
           <div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center font-bold">📊</div>
         </div>
 
-        <div class="bg-play-card border border-emerald-200 bg-emerald-50/30 rounded-2xl p-5 play-card-shadow flex items-center justify-between">
+        <div class="bg-play-card border border-emerald-200 bg-emerald-50/20 rounded-2xl p-5 play-card-shadow flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Suara Sah</p>
+            <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Total Suara Sah</p>
             <h3 id="stat-valid-votes" class="text-3xl font-black text-emerald-600 mt-1">0</h3>
-            <p class="text-[11px] text-emerald-700 font-semibold mt-1">@smatalenta.sch.id</p>
+            <p class="text-[11px] text-emerald-700 font-semibold mt-1">Domain @smatalenta.sch.id</p>
           </div>
           <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center font-bold">✅</div>
         </div>
 
-        <div class="bg-play-card border border-red-200 bg-red-50/30 rounded-2xl p-5 play-card-shadow flex items-center justify-between">
+        <div class="bg-play-card border border-red-200 bg-red-50/20 rounded-2xl p-5 play-card-shadow flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-red-800 uppercase tracking-wider">Suara Tidak Sah</p>
+            <p class="text-xs font-bold text-red-800 uppercase tracking-wider">Total Suara Tidak Sah</p>
             <h3 id="stat-invalid-votes" class="text-3xl font-black text-red-600 mt-1">0</h3>
-            <p class="text-[11px] text-red-700 font-semibold mt-1">Domain Luar / Bebas</p>
+            <p class="text-[11px] text-red-700 font-semibold mt-1">Di Luar Domain Resmi</p>
           </div>
-          <div class="w-12 h-12 bg-red-100 text-red-700 rounded-2xl flex items-center justify-center font-bold">❌</div>
+          <div class="w-12 h-12 bg-red-100 text-red-700 rounded-2xl flex items-center justify-center font-bold">🚫</div>
         </div>
 
         <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Paslon Unggul</p>
+            <p class="text-xs font-bold text-play-subtle uppercase tracking-wider">Paslon Unggul (Sah)</p>
             <h3 id="stat-leader" class="text-xl font-black text-play-green mt-1">-</h3>
             <p id="stat-leader-votes" class="text-[11px] text-play-subtle font-semibold mt-1">0 Suara Sah</p>
           </div>
@@ -138,15 +138,15 @@
 
       </div>
 
-      <!-- GRAFIK PEROLEHAN SUARA SAH -->
+      <!-- GRAFIK COMPARISON (STACKED BAR & DOUGHNUT) -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
           <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
             <div>
-              <h2 class="text-sm font-extrabold text-play-dark">Grafik Perolehan Suara Sah</h2>
-              <p class="text-xs text-play-subtle">Hanya menghitung pemilih ber-domain @smatalenta.sch.id</p>
+              <h2 class="text-sm font-extrabold text-play-dark">Perbandingan Suara Sah vs Tidak Sah Per Paslon</h2>
+              <p class="text-xs text-play-subtle">Visualisasi rincian kualitas suara untuk tiap pasangan calon</p>
             </div>
-            <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Bar Chart</span>
+            <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Grouped Bar</span>
           </div>
           <div class="h-64 sm:h-80 relative">
             <canvas id="barChart"></canvas>
@@ -156,10 +156,10 @@
         <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
           <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
             <div>
-              <h2 class="text-sm font-extrabold text-play-dark">Persentase Suara Sah</h2>
-              <p class="text-xs text-play-subtle">Proporsi Suara Sah Paslon</p>
+              <h2 class="text-sm font-extrabold text-play-dark">Persentase Perolehan Suara Sah</h2>
+              <p class="text-xs text-play-subtle">Proporsi pemilih resmi @smatalenta.sch.id</p>
             </div>
-            <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Doughnut</span>
+            <span class="text-[11px] font-bold bg-play-bg px-2.5 py-1 rounded-lg border border-play-border text-play-subtle">Share %</span>
           </div>
           <div class="h-64 sm:h-80 relative flex items-center justify-center">
             <canvas id="doughnutChart"></canvas>
@@ -167,11 +167,14 @@
         </div>
       </div>
 
-      <!-- RINCIAN PASLON -->
+      <!-- TABEL 1: RINCIAN SUARA SAH DAN TIDAK SAH PER PASLON -->
       <div class="bg-play-card border border-play-border rounded-2xl p-5 play-card-shadow">
         <div class="flex items-center justify-between mb-4 pb-3 border-b border-play-border">
-          <h2 class="text-sm font-extrabold text-play-dark">Rincian Perolehan Suara Sah Kandidat</h2>
-          <span class="text-xs font-bold text-play-green bg-play-green-mint px-2.5 py-0.5 rounded-full border border-play-green/20">Official Result</span>
+          <div>
+            <h2 class="text-sm font-extrabold text-play-dark">Rincian Hasil Pemungutan Suara Per Paslon</h2>
+            <p class="text-xs text-play-subtle">Perhitungan statistik suara sah dan tidak sah tiap pasangan calon</p>
+          </div>
+          <span class="text-xs font-bold text-play-green bg-play-green-mint px-2.5 py-0.5 rounded-full border border-play-green/20">Rekap Resmi</span>
         </div>
 
         <div class="overflow-x-auto">
@@ -180,65 +183,81 @@
               <tr class="text-play-subtle uppercase border-b border-play-border bg-play-bg">
                 <th class="py-3 px-3">No</th>
                 <th class="py-3 px-3">Pasangan Calon</th>
-                <th class="py-3 px-3 text-center">Suara Sah</th>
-                <th class="py-3 px-3 text-right">Persentase (dari Suara Sah)</th>
+                <th class="py-3 px-3 text-center bg-emerald-50/50 text-emerald-800">Suara Sah</th>
+                <th class="py-3 px-3 text-center bg-red-50/50 text-red-800">Suara Tidak Sah</th>
+                <th class="py-3 px-3 text-center">Total Suara</th>
+                <th class="py-3 px-3 text-right">Persentase Sah</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-play-border font-medium">
               <tr>
-                <td class="py-3 px-3 font-black text-emerald-600">01</td>
-                <td class="py-3 px-3 font-extrabold text-play-dark">Karenn Aeleena Nicole & Kenneth Richie Sabella</td>
-                <td id="table-v1" class="py-3 px-3 text-center font-bold text-sm">0</td>
-                <td id="table-p1" class="py-3 px-3 text-right font-extrabold text-emerald-600">0.0%</td>
+                <td class="py-3.5 px-3 font-black text-emerald-600">01</td>
+                <td class="py-3.5 px-3">
+                  <p class="font-extrabold text-play-dark">Karenn Aeleena Nicole</p>
+                  <p class="text-[11px] text-play-subtle">& Kenneth Richie Sabella</p>
+                </td>
+                <td id="p1-valid" class="py-3.5 px-3 text-center font-black text-emerald-600 text-sm bg-emerald-50/20">0</td>
+                <td id="p1-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-sm bg-red-50/20">0</td>
+                <td id="p1-total" class="py-3.5 px-3 text-center font-extrabold text-play-dark">0</td>
+                <td id="p1-percent" class="py-3.5 px-3 text-right font-black text-emerald-600 text-sm">0.0%</td>
               </tr>
               <tr>
-                <td class="py-3 px-3 font-black text-blue-600">02</td>
-                <td class="py-3 px-3 font-extrabold text-play-dark">Xavier Lee Felton & Muhammad Rafie Asmoro</td>
-                <td id="table-v2" class="py-3 px-3 text-center font-bold text-sm">0</td>
-                <td id="table-p2" class="py-3 px-3 text-right font-extrabold text-blue-600">0.0%</td>
+                <td class="py-3.5 px-3 font-black text-blue-600">02</td>
+                <td class="py-3.5 px-3">
+                  <p class="font-extrabold text-play-dark">Xavier Lee Felton</p>
+                  <p class="text-[11px] text-play-subtle">& Muhammad Rafie Asmoro</p>
+                </td>
+                <td id="p2-valid" class="py-3.5 px-3 text-center font-black text-emerald-600 text-sm bg-emerald-50/20">0</td>
+                <td id="p2-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-sm bg-red-50/20">0</td>
+                <td id="p2-total" class="py-3.5 px-3 text-center font-extrabold text-play-dark">0</td>
+                <td id="p2-percent" class="py-3.5 px-3 text-right font-black text-blue-600 text-sm">0.0%</td>
               </tr>
               <tr>
-                <td class="py-3 px-3 font-black text-amber-600">03</td>
-                <td class="py-3 px-3 font-extrabold text-play-dark">Ravel Fulvi Algha Yapiawan & Catharina Putri Chavella K.</td>
-                <td id="table-v3" class="py-3 px-3 text-center font-bold text-sm">0</td>
-                <td id="table-p3" class="py-3 px-3 text-right font-extrabold text-amber-600">0.0%</td>
+                <td class="py-3.5 px-3 font-black text-amber-600">03</td>
+                <td class="py-3.5 px-3">
+                  <p class="font-extrabold text-play-dark">Ravel Fulvi Algha Yapiawan</p>
+                  <p class="text-[11px] text-play-subtle">& Catharina Putri Chavella K.</p>
+                </td>
+                <td id="p3-valid" class="py-3.5 px-3 text-center font-black text-emerald-600 text-sm bg-emerald-50/20">0</td>
+                <td id="p3-invalid" class="py-3.5 px-3 text-center font-bold text-red-600 text-sm bg-red-50/20">0</td>
+                <td id="p3-total" class="py-3.5 px-3 text-center font-extrabold text-play-dark">0</td>
+                <td id="p3-percent" class="py-3.5 px-3 text-right font-black text-amber-600 text-sm">0.0%</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- DAFTAR SUARA SAH DAN DAFTAR SUARA TIDAK SAH -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        <!-- DAFTAR SUARA SAH -->
-        <div class="bg-play-card border border-emerald-200 rounded-2xl p-5 play-card-shadow">
-          <div class="flex items-center justify-between mb-4 pb-3 border-b border-emerald-100">
-            <h2 class="text-sm font-extrabold text-emerald-900 flex items-center space-x-2">
-              <span>Daftar Alamat Pemilih Sah</span>
-              <span id="badge-valid-count" class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full font-extrabold">0</span>
-            </h2>
-            <span class="text-[10px] font-bold text-emerald-600">@smatalenta.sch.id</span>
-          </div>
-          <div id="valid-list-container" class="space-y-2 max-h-80 overflow-y-auto text-xs pr-1">
-            <p class="text-play-subtle text-center py-6">Memuat data suara sah...</p>
-          </div>
-        </div>
-
-        <!-- DAFTAR SUARA TIDAK SAH -->
-        <div class="bg-play-card border border-red-200 rounded-2xl p-5 play-card-shadow">
-          <div class="flex items-center justify-between mb-4 pb-3 border-b border-red-100">
+      <!-- TABEL 2: DAFTAR EMAIL TIDAK SAH (NON-@SMATALENTA.SCH.ID) -->
+      <div class="bg-play-card border border-red-200 rounded-2xl p-5 play-card-shadow">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-red-100">
+          <div>
             <h2 class="text-sm font-extrabold text-red-900 flex items-center space-x-2">
-              <span>Daftar Alamat Pemilih Tidak Sah</span>
-              <span id="badge-invalid-count" class="bg-red-100 text-red-700 text-[10px] px-2 py-0.5 rounded-full font-extrabold">0</span>
+              <span>Daftar Email Tidak Sah (Bukan Domain @smatalenta.sch.id)</span>
+              <span id="badge-invalid-count" class="bg-red-100 text-red-700 text-[10px] px-2.5 py-0.5 rounded-full font-extrabold">0</span>
             </h2>
-            <span class="text-[10px] font-bold text-red-600">Domain Luar</span>
+            <p class="text-xs text-red-600 mt-0.5">Seluruh entri vote dari akun umum / email luar yang gugur secara otomatis</p>
           </div>
-          <div id="invalid-list-container" class="space-y-2 max-h-80 overflow-y-auto text-xs pr-1">
-            <p class="text-play-subtle text-center py-6">Memuat data suara tidak sah...</p>
-          </div>
+          <span class="text-[10px] font-bold bg-red-100 text-red-700 px-2.5 py-1 rounded-lg">Diskualifikasi</span>
         </div>
 
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-red-900 uppercase border-b border-red-100 bg-red-50/60">
+                <th class="py-2.5 px-3">Waktu Vote</th>
+                <th class="py-2.5 px-3">Alamat Email</th>
+                <th class="py-2.5 px-3 text-center">Pilihan Paslon</th>
+                <th class="py-2.5 px-3 text-right">Keterangan</th>
+              </tr>
+            </thead>
+            <tbody id="invalid-table-body" class="divide-y divide-red-100 font-medium">
+              <tr>
+                <td colspan="4" class="text-center py-6 text-play-subtle">Belum ada suara tidak sah.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
     </main>
@@ -295,28 +314,41 @@
   }
 
   function initCharts() {
+    // Grouped Bar Chart (Sah vs Tidak Sah)
     const ctxBar = document.getElementById('barChart').getContext('2d');
     barChartInstance = new Chart(ctxBar, {
       type: 'bar',
       data: {
         labels: ['Paslon 01', 'Paslon 02', 'Paslon 03'],
-        datasets: [{
-          label: 'Suara Sah',
-          data: [0, 0, 0],
-          backgroundColor: ['#01875F', '#1A73E8', '#F59E0B'],
-          borderRadius: 12
-        }]
+        datasets: [
+          {
+            label: 'Suara Sah (@smatalenta)',
+            data: [0, 0, 0],
+            backgroundColor: '#01875F',
+            borderRadius: 8
+          },
+          {
+            label: 'Suara Tidak Sah (Domain Luar)',
+            data: [0, 0, 0],
+            backgroundColor: '#EF4444',
+            borderRadius: 8
+          }
+        ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        plugins: {
+          legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', weight: 'bold', size: 11 } } }
+        },
         scales: {
-          y: { beginAtZero: true, ticks: { precision: 0 } }
+          y: { beginAtZero: true, ticks: { precision: 0 } },
+          x: { ticks: { font: { family: 'Plus Jakarta Sans', weight: 'bold' } } }
         }
       }
     });
 
+    // Doughnut Chart (Suara Sah Only)
     const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
     doughnutChartInstance = new Chart(ctxDoughnut, {
       type: 'doughnut',
@@ -331,7 +363,7 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } },
+        plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', weight: 'bold', size: 11 } } } },
         cutout: '70%'
       }
     });
@@ -356,86 +388,71 @@
   }
 
   function updateDashboardUI(data) {
-    const v1 = data.paslon1 || 0;
-    const v2 = data.paslon2 || 0;
-    const v3 = data.paslon3 || 0;
-    
-    const totalVotes = data.totalVotes || 0;
-    const validVotes = data.validVotes || 0;
-    const invalidVotes = data.invalidVotes || 0;
+    const p1 = data.paslon1 || { valid: 0, invalid: 0, total: 0 };
+    const p2 = data.paslon2 || { valid: 0, invalid: 0, total: 0 };
+    const p3 = data.paslon3 || { valid: 0, invalid: 0, total: 0 };
 
-    // KPI Summary
+    const totalVotes = data.totalVotes || 0;
+    const totalValid = data.totalValid || 0;
+    const totalInvalid = data.totalInvalid || 0;
+
+    // 1. KPI Cards
     document.getElementById('stat-total-votes').innerText = totalVotes.toLocaleString('id-ID');
-    document.getElementById('stat-valid-votes').innerText = validVotes.toLocaleString('id-ID');
-    document.getElementById('stat-invalid-votes').innerText = invalidVotes.toLocaleString('id-ID');
+    document.getElementById('stat-valid-votes').innerText = totalValid.toLocaleString('id-ID');
+    document.getElementById('stat-invalid-votes').innerText = totalInvalid.toLocaleString('id-ID');
 
     let leaderText = "-";
     let leaderVotes = 0;
-    if (validVotes > 0) {
-      if (v1 >= v2 && v1 >= v3) { leaderText = "Paslon 01"; leaderVotes = v1; }
-      else if (v2 >= v1 && v2 >= v3) { leaderText = "Paslon 02"; leaderVotes = v2; }
-      else { leaderText = "Paslon 03"; leaderVotes = v3; }
+    if (totalValid > 0) {
+      if (p1.valid >= p2.valid && p1.valid >= p3.valid) { leaderText = "Paslon 01"; leaderVotes = p1.valid; }
+      else if (p2.valid >= p1.valid && p2.valid >= p3.valid) { leaderText = "Paslon 02"; leaderVotes = p2.valid; }
+      else { leaderText = "Paslon 03"; leaderVotes = p3.valid; }
     }
     document.getElementById('stat-leader').innerText = leaderText;
     document.getElementById('stat-leader-votes').innerText = leaderVotes + " Suara Sah";
 
-    // Charts
-    barChartInstance.data.datasets[0].data = [v1, v2, v3];
+    // 2. Grafik Update
+    barChartInstance.data.datasets[0].data = [p1.valid, p2.valid, p3.valid];
+    barChartInstance.data.datasets[1].data = [p1.invalid, p2.invalid, p3.invalid];
     barChartInstance.update();
 
-    doughnutChartInstance.data.datasets[0].data = [v1, v2, v3];
+    doughnutChartInstance.data.datasets[0].data = [p1.valid, p2.valid, p3.valid];
     doughnutChartInstance.update();
 
-    // Candidate Table
-    document.getElementById('table-v1').innerText = v1;
-    document.getElementById('table-v2').innerText = v2;
-    document.getElementById('table-v3').innerText = v3;
+    // 3. Tabel Rekap Paslon Update
+    document.getElementById('p1-valid').innerText = p1.valid;
+    document.getElementById('p1-invalid').innerText = p1.invalid;
+    document.getElementById('p1-total').innerText = p1.total;
+    document.getElementById('p1-percent').innerText = totalValid > 0 ? ((p1.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%";
 
-    const p1 = validVotes > 0 ? ((v1 / validVotes) * 100).toFixed(1) : "0.0";
-    const p2 = validVotes > 0 ? ((v2 / validVotes) * 100).toFixed(1) : "0.0";
-    const p3 = validVotes > 0 ? ((v3 / validVotes) * 100).toFixed(1) : "0.0";
+    document.getElementById('p2-valid').innerText = p2.valid;
+    document.getElementById('p2-invalid').innerText = p2.invalid;
+    document.getElementById('p2-total').innerText = p2.total;
+    document.getElementById('p2-percent').innerText = totalValid > 0 ? ((p2.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%";
 
-    document.getElementById('table-p1').innerText = p1 + "%";
-    document.getElementById('table-p2').innerText = p2 + "%";
-    document.getElementById('table-p3').innerText = p3 + "%";
+    document.getElementById('p3-valid').innerText = p3.valid;
+    document.getElementById('p3-invalid').innerText = p3.invalid;
+    document.getElementById('p3-total').innerText = p3.total;
+    document.getElementById('p3-percent').innerText = totalValid > 0 ? ((p3.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%";
 
-    // Valid List
-    document.getElementById('badge-valid-count').innerText = validVotes;
-    const validContainer = document.getElementById('valid-list-container');
-    if (data.validLogs && data.validLogs.length > 0) {
-      validContainer.innerHTML = data.validLogs.map(log => `
-        <div class="flex items-center justify-between p-2.5 bg-emerald-50/50 rounded-xl border border-emerald-100">
-          <div class="flex items-center space-x-2.5 min-w-0">
-            <span class="w-6 h-6 rounded-lg font-black text-[10px] flex items-center justify-center text-white ${
-              log.choice === 1 ? 'bg-emerald-600' : log.choice === 2 ? 'bg-blue-600' : 'bg-amber-600'
-            }">0${log.choice}</span>
-            <span class="font-bold text-play-dark truncate">${log.email}</span>
-          </div>
-          <span class="text-[10px] font-semibold text-emerald-700 flex-shrink-0 ml-2">${log.time}</span>
-        </div>
-      `).join('');
-    } else {
-      validContainer.innerHTML = `<p class="text-play-subtle text-center py-6">Belum ada suara sah masuk.</p>`;
-    }
-
-    // Invalid List
-    document.getElementById('badge-invalid-count').innerText = invalidVotes;
-    const invalidContainer = document.getElementById('invalid-list-container');
+    // 4. Tabel Email Tidak Sah Update
+    document.getElementById('badge-invalid-count').innerText = totalInvalid;
+    const invalidTbody = document.getElementById('invalid-table-body');
     if (data.invalidLogs && data.invalidLogs.length > 0) {
-      invalidContainer.innerHTML = data.invalidLogs.map(log => `
-        <div class="flex items-center justify-between p-2.5 bg-red-50/50 rounded-xl border border-red-100">
-          <div class="flex items-center space-x-2.5 min-w-0">
-            <span class="w-6 h-6 rounded-lg font-black text-[10px] flex items-center justify-center text-white bg-slate-500">0${log.choice}</span>
-            <div class="min-w-0">
-              <p class="font-bold text-red-900 truncate">${log.email}</p>
-              <p class="text-[9px] text-red-600 font-medium">${log.reason}</p>
-            </div>
-          </div>
-          <span class="text-[10px] font-semibold text-red-600 flex-shrink-0 ml-2">${log.time}</span>
-        </div>
+      invalidTbody.innerHTML = data.invalidLogs.map(log => `
+        <tr class="hover:bg-red-50/40">
+          <td class="py-3 px-3 font-semibold text-slate-500">${log.time}</td>
+          <td class="py-3 px-3 font-black text-red-900">${log.email}</td>
+          <td class="py-3 px-3 text-center">
+            <span class="inline-block px-2.5 py-0.5 rounded-full font-black text-[10px] text-white ${
+              log.choice === 1 ? 'bg-emerald-600' : log.choice === 2 ? 'bg-blue-600' : 'bg-amber-600'
+            }">Paslon 0${log.choice}</span>
+          </td>
+          <td class="py-3 px-3 text-right font-extrabold text-red-600">${log.reason}</td>
+        </tr>
       `).join('');
     } else {
-      invalidContainer.innerHTML = `<p class="text-play-subtle text-center py-6">Tidak ada suara tidak sah.</p>`;
+      invalidTbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-play-subtle">Tidak ada suara tidak sah. Semua pemilih menggunakan domain @smatalenta.sch.id</td></tr>`;
     }
   }
 </script>
