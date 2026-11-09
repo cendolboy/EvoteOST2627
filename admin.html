@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Real-time Dashboard - OST E-Vote SMA Talenta</title>
 
+  <!-- Tailwind CSS & Chart.js CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -231,9 +232,9 @@
       <!-- DUA TABEL DAFTAR EMAIL: SAH & TIDAK SAH BERDAMPINGAN -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        <!-- TABEL 2A: DAFTAR EMAIL SAH (@SMATALENTA.SCH.ID) -->
-        <div class="bg-play-card border border-emerald-200 rounded-2xl p-5 play-card-shadow">
-          <div class="flex items-center justify-between mb-4 pb-3 border-b border-emerald-100">
+        <!-- TABEL 2A: DAFTAR EMAIL SAH DENGAN SEARCH INPUT -->
+        <div class="bg-play-card border border-emerald-200 rounded-2xl p-5 play-card-shadow space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-emerald-100">
             <div>
               <h2 class="text-sm font-extrabold text-emerald-900 flex items-center space-x-2">
                 <span>Daftar Email Pemilih Sah</span>
@@ -241,7 +242,16 @@
               </h2>
               <p class="text-xs text-emerald-600 mt-0.5">Pemilih resmi domain @smatalenta.sch.id</p>
             </div>
-            <span class="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-lg">Terverifikasi</span>
+            <span class="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-lg self-start sm:self-auto">Terverifikasi</span>
+          </div>
+
+          <!-- INPUT PENCARIAN EMAIL SAH -->
+          <div class="relative">
+            <input type="text" id="search-valid-input" oninput="filterValidLogs()" placeholder="Cari nama email / paslon (contoh: siswa@smatalenta)..." 
+              class="w-full pl-9 pr-4 py-2 border border-emerald-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-emerald-500 bg-emerald-50/30">
+            <svg class="w-4 h-4 text-emerald-600 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
           </div>
 
           <div class="overflow-x-auto max-h-80 overflow-y-auto">
@@ -264,8 +274,8 @@
         </div>
 
         <!-- TABEL 2B: DAFTAR EMAIL TIDAK SAH (NON-@SMATALENTA.SCH.ID) -->
-        <div class="bg-play-card border border-red-200 rounded-2xl p-5 play-card-shadow">
-          <div class="flex items-center justify-between mb-4 pb-3 border-b border-red-100">
+        <div class="bg-play-card border border-red-200 rounded-2xl p-5 play-card-shadow space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-red-100">
             <div>
               <h2 class="text-sm font-extrabold text-red-900 flex items-center space-x-2">
                 <span>Daftar Email Tidak Sah</span>
@@ -276,7 +286,7 @@
             <span class="text-[10px] font-bold bg-red-100 text-red-700 px-2.5 py-1 rounded-lg">Diskualifikasi</span>
           </div>
 
-          <div class="overflow-x-auto max-h-80 overflow-y-auto">
+          <div class="overflow-x-auto max-h-80 overflow-y-auto mt-9">
             <table class="w-full text-left text-xs">
               <thead class="sticky top-0 z-10 bg-red-50">
                 <tr class="text-red-900 uppercase border-b border-red-100">
@@ -309,6 +319,7 @@
   let barChartInstance = null;
   let doughnutChartInstance = null;
   let autoRefreshInterval = null;
+  let globalValidLogs = []; // Cache log suara sah untuk fitur search
 
   window.onload = function() {
     if (sessionStorage.getItem('admin_authenticated') === 'true') {
@@ -446,11 +457,12 @@
     const p2 = parsePaslon(data.paslon2);
     const p3 = parsePaslon(data.paslon3);
 
-    const totalValid = data.totalValid !== undefined ? Number(data.totalValid) : (p1.valid + p2.valid + p3.valid);
-    const totalInvalid = data.totalInvalid !== undefined ? Number(data.totalInvalid) : (p1.invalid + p2.invalid + p3.invalid);
-    const totalVotes = data.totalVotes !== undefined ? Number(data.totalVotes) : (totalValid + totalInvalid);
+    // Total Suara Sah murni hasil akumulasi sah 3 Paslon
+    const totalValid = p1.valid + p2.valid + p3.valid;
+    const totalInvalid = p1.invalid + p2.invalid + p3.invalid;
+    const totalVotes = totalValid + totalInvalid;
 
-    // 1. KPI Cards
+    // 1. KPI Cards Update
     setElText('stat-total-votes', totalVotes.toLocaleString('id-ID'));
     setElText('stat-valid-votes', totalValid.toLocaleString('id-ID'));
     setElText('stat-invalid-votes', totalInvalid.toLocaleString('id-ID'));
@@ -479,47 +491,33 @@
       doughnutChartInstance.update();
     }
 
-    // 3. Tabel Rekapituasi Paslon
+    // 3. Kalkulasi Persentase Sah Akurat per Paslon dari Total Suara Sah
+    const pct1 = totalValid > 0 ? ((p1.valid / totalValid) * 100).toFixed(1) : "0.0";
+    const pct2 = totalValid > 0 ? ((p2.valid / totalValid) * 100).toFixed(1) : "0.0";
+    const pct3 = totalValid > 0 ? ((p3.valid / totalValid) * 100).toFixed(1) : "0.0";
+
+    // 4. Update Tabel Rekapitulasi Paslon
     setElText('p1-valid', p1.valid);
     setElText('p1-invalid', p1.invalid);
     setElText('p1-total', p1.total);
-    setElText('p1-percent', totalValid > 0 ? ((p1.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%");
+    setElText('p1-percent', pct1 + "%");
 
     setElText('p2-valid', p2.valid);
     setElText('p2-invalid', p2.invalid);
     setElText('p2-total', p2.total);
-    setElText('p2-percent', totalValid > 0 ? ((p2.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%");
+    setElText('p2-percent', pct2 + "%");
 
     setElText('p3-valid', p3.valid);
     setElText('p3-invalid', p3.invalid);
     setElText('p3-total', p3.total);
-    setElText('p3-percent', totalValid > 0 ? ((p3.valid / totalValid) * 100).toFixed(1) + "%" : "0.0%");
+    setElText('p3-percent', pct3 + "%");
 
-    // 4. Update Tabel Email Sah (@smatalenta.sch.id)
+    // 5. Simpan Cache Log Suara Sah & Render Tabel dengan Filter
+    globalValidLogs = data.validLogs || [];
     setElText('badge-valid-count', totalValid);
-    const validTbody = document.getElementById('valid-table-body');
-    if (validTbody) {
-      if (data.validLogs && data.validLogs.length > 0) {
-        validTbody.innerHTML = data.validLogs.map(log => `
-          <tr class="hover:bg-emerald-50/40">
-            <td class="py-2.5 px-3 font-semibold text-slate-500">${log.time}</td>
-            <td class="py-2.5 px-3 font-black text-emerald-950">${log.email}</td>
-            <td class="py-2.5 px-3 text-center">
-              <span class="inline-block px-2.5 py-0.5 rounded-full font-black text-[10px] text-white ${
-                log.choice === 1 ? 'bg-emerald-600' : log.choice === 2 ? 'bg-blue-600' : 'bg-amber-600'
-              }">Paslon 0${log.choice}</span>
-            </td>
-            <td class="py-2.5 px-3 text-right">
-              <span class="inline-block px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">✓ SAH</span>
-            </td>
-          </tr>
-        `).join('');
-      } else {
-        validTbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-play-subtle">Belum ada suara sah terverifikasi dari domain @smatalenta.sch.id</td></tr>`;
-      }
-    }
+    filterValidLogs();
 
-    // 5. Update Tabel Email Tidak Sah
+    // 6. Render Tabel Email Tidak Sah
     setElText('badge-invalid-count', totalInvalid);
     const invalidTbody = document.getElementById('invalid-table-body');
     if (invalidTbody) {
@@ -540,6 +538,50 @@
         invalidTbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-play-subtle">Tidak ada suara tidak sah. Semua pemilih menggunakan domain @smatalenta.sch.id</td></tr>`;
       }
     }
+  }
+
+  // FUNGSI PENCARIAN REAL-TIME UNTUK EMAIL SAH
+  function filterValidLogs() {
+    const searchInput = document.getElementById('search-valid-input');
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+    const validTbody = document.getElementById('valid-table-body');
+
+    if (!validTbody) return;
+
+    const filteredLogs = globalValidLogs.filter(log => {
+      const emailMatch = log.email.toLowerCase().includes(query);
+      const paslonMatch = ("paslon 0" + log.choice).includes(query) || ("0" + log.choice).includes(query);
+      return emailMatch || paslonMatch;
+    });
+
+    if (filteredLogs.length > 0) {
+      validTbody.innerHTML = filteredLogs.map(log => `
+        <tr class="hover:bg-emerald-50/40">
+          <td class="py-2.5 px-3 font-semibold text-slate-500">${log.time}</td>
+          <td class="py-2.5 px-3 font-black text-emerald-950">${highlightSearch(log.email, query)}</td>
+          <td class="py-2.5 px-3 text-center">
+            <span class="inline-block px-2.5 py-0.5 rounded-full font-black text-[10px] text-white ${
+              log.choice === 1 ? 'bg-emerald-600' : log.choice === 2 ? 'bg-blue-600' : 'bg-amber-600'
+            }">Paslon 0${log.choice}</span>
+          </td>
+          <td class="py-2.5 px-3 text-right">
+            <span class="inline-block px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">✓ SAH</span>
+          </td>
+        </tr>
+      `).join('');
+    } else {
+      if (query !== "") {
+        validTbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-play-subtle font-medium">Email / Keyword <strong>"${query}"</strong> tidak ditemukan di daftar suara sah.</td></tr>`;
+      } else {
+        validTbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-play-subtle">Belum ada suara sah terverifikasi dari domain @smatalenta.sch.id</td></tr>`;
+      }
+    }
+  }
+
+  function highlightSearch(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, `<mark class="bg-amber-200 text-amber-950 rounded px-0.5">$1</mark>`);
   }
 </script>
 
